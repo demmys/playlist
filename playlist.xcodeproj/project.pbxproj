@@ -14,6 +14,8 @@
 		10B67C741DBFA62E00EF1D47 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10B67C721DBFA62E00EF1D47 /* LaunchScreen.storyboard */; };
 		10B67C7F1DBFA62E00EF1D47 /* playlistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C7E1DBFA62E00EF1D47 /* playlistTests.swift */; };
 		10B67C8A1DBFA62E00EF1D47 /* playlistUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C891DBFA62E00EF1D47 /* playlistUITests.swift */; };
+		10B67C981DC0E8A300EF1D47 /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C971DC0E8A300EF1D47 /* PlayerModel.swift */; };
+		10B67C9A1DC0F5EC00EF1D47 /* PickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C991DC0F5EC00EF1D47 /* PickerModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		10B67C851DBFA62E00EF1D47 /* playlistUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = playlistUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		10B67C891DBFA62E00EF1D47 /* playlistUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = playlistUITests.swift; sourceTree = "<group>"; };
 		10B67C8B1DBFA62E00EF1D47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		10B67C971DC0E8A300EF1D47 /* PlayerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
+		10B67C991DC0F5EC00EF1D47 /* PickerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,8 @@
 				10B67C701DBFA62E00EF1D47 /* Assets.xcassets */,
 				10B67C721DBFA62E00EF1D47 /* LaunchScreen.storyboard */,
 				10B67C751DBFA62E00EF1D47 /* Info.plist */,
+				10B67C971DC0E8A300EF1D47 /* PlayerModel.swift */,
+				10B67C991DC0F5EC00EF1D47 /* PickerModel.swift */,
 			);
 			path = playlist;
 			sourceTree = "<group>";
@@ -193,6 +199,7 @@
 				TargetAttributes = {
 					10B67C651DBFA62D00EF1D47 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = ZU9NB3NP87;
 						ProvisioningStyle = Automatic;
 					};
 					10B67C791DBFA62E00EF1D47 = {
@@ -260,6 +267,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				10B67C6C1DBFA62E00EF1D47 /* ViewController.swift in Sources */,
+				10B67C9A1DC0F5EC00EF1D47 /* PickerModel.swift in Sources */,
+				10B67C981DC0E8A300EF1D47 /* PlayerModel.swift in Sources */,
 				10B67C6A1DBFA62E00EF1D47 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -410,6 +419,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZU9NB3NP87;
 				INFOPLIST_FILE = playlist/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.demmys.playlist;
@@ -422,6 +432,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZU9NB3NP87;
 				INFOPLIST_FILE = playlist/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.demmys.playlist;
@@ -503,6 +514,7 @@
 				10B67C901DBFA62E00EF1D47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		10B67C911DBFA62E00EF1D47 /* Build configuration list for PBXNativeTarget "playlistTests" */ = {
 			isa = XCConfigurationList;
@@ -511,6 +523,7 @@
 				10B67C931DBFA62E00EF1D47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		10B67C941DBFA62E00EF1D47 /* Build configuration list for PBXNativeTarget "playlistUITests" */ = {
 			isa = XCConfigurationList;
@@ -519,6 +532,7 @@
 				10B67C961DBFA62E00EF1D47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
