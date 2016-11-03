@@ -10,9 +10,12 @@ import Foundation
 import MediaPlayer
 
 class PickerModel : NSObject, MPMediaPickerControllerDelegate {
-    private var _onPickFinishedObserver: ((MPMediaItemCollection) -> Void)?
-    private var _onPickCanceledObserver: ((Void) -> Void)?
-    
+    private let _delegate: PickerModelDelegate
+
+    init(delegate: PickerModelDelegate) {
+        _delegate = delegate
+    }
+
     func factory() -> MPMediaPickerController {
         let picker = MPMediaPickerController()
         picker.delegate = self
@@ -20,23 +23,11 @@ class PickerModel : NSObject, MPMediaPickerControllerDelegate {
         return picker
     }
     
-    func setOnPickFinished(observer: @escaping (MPMediaItemCollection) -> Void) {
-        _onPickFinishedObserver = observer
-    }
-    
-    func setOnPickCanceled(observer: @escaping (Void) -> Void) {
-        _onPickCanceledObserver = observer
-    }
-    
     func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
-        if let observer = _onPickFinishedObserver {
-            observer(mediaItemCollection)
-        }
+        _delegate.didPickFinish(collection: mediaItemCollection)
     }
     
     func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
-        if let observer = _onPickCanceledObserver {
-            observer()
-        }
+        _delegate.didPickCancel()
     }
 }
