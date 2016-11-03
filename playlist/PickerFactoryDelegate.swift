@@ -9,7 +9,7 @@
 import Foundation
 import MediaPlayer
 
-protocol PickerModelDelegate {
+protocol PickerFactoryDelegate : class {
     func didPickFinish(collection: MPMediaItemCollection)
     func didPickCancel()
 }

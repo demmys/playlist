@@ -12,16 +12,14 @@ import MediaPlayer
 
 class AudioModel : NSObject, AVAudioPlayerDelegate {
     private let _player: AVAudioPlayer
-    private let _delegate: AudioModelDelegate
-    
+    private weak var _delegate: AudioModelDelegate?
+
     var isPlaying: Bool {
         get { return _player.isPlaying }
     }
 
     var inBeginning: Bool {
-        get {
-            print(_player.currentTime)
-            return _player.currentTime < 5 }
+        get { return _player.currentTime < 5 }
     }
 
     init?(withItem item: MPMediaItem, playSoon: Bool, delegate: AudioModelDelegate) {
@@ -40,7 +38,7 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
             _player.prepareToPlay()
         }
     }
-    
+
     func play(withDelay delay: TimeInterval = 0) {
         if delay > 0 {
             _player.play(atTime: _player.deviceCurrentTime + delay)
@@ -48,26 +46,26 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
             _player.play()
         }
     }
-    
+
     func pause() {
         _player.pause()
     }
-    
+
     func stop() {
         // TODO: fade out option
         _player.stop()
         _player.currentTime = 0.0
     }
-    
+
     func cue() {
         _player.currentTime = 0.0
     }
-    
+
     func seek(toTime target: TimeInterval) {
         _player.currentTime = target
     }
-    
+
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        _delegate.playingAudioDidFinish(successfully: flag)
+        _delegate?.playingAudioDidFinish(successfully: flag)
     }
 }

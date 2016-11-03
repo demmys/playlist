@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol AudioModelDelegate {
+protocol AudioModelDelegate : class {
     func playingAudioDidFinish(successfully flag: Bool)
 }

@@ -9,25 +9,25 @@
 import Foundation
 import MediaPlayer
 
-class PickerModel : NSObject, MPMediaPickerControllerDelegate {
-    private let _delegate: PickerModelDelegate
+class PickerFactory : NSObject, MPMediaPickerControllerDelegate {
+    private weak var _delegate: PickerFactoryDelegate?
 
-    init(delegate: PickerModelDelegate) {
+    init(delegate: PickerFactoryDelegate) {
         _delegate = delegate
     }
 
-    func factory() -> MPMediaPickerController {
+    func build() -> MPMediaPickerController {
         let picker = MPMediaPickerController()
         picker.delegate = self
         picker.allowsPickingMultipleItems = true
         return picker
     }
-    
+
     func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
-        _delegate.didPickFinish(collection: mediaItemCollection)
+        _delegate?.didPickFinish(collection: mediaItemCollection)
     }
-    
+
     func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
-        _delegate.didPickCancel()
+        _delegate?.didPickCancel()
     }
 }

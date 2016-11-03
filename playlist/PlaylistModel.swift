@@ -9,7 +9,7 @@
 import Foundation
 import MediaPlayer
 
-class PlaylistModel : AudioModelDelegate {
+class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
     enum RepeatMode {
         case noRepeat
         case allRepeat
@@ -21,7 +21,8 @@ class PlaylistModel : AudioModelDelegate {
         case allShuffle
     }
 
-    private let _delegate: PlaylistModelDelegate
+    private weak var _delegate: PlaylistModelDelegate?
+    private var _remoteControl: RemoteControlModel!
     private var _repeatMode: RepeatMode = .noRepeat
     private var _shuffleMode: ShuffleMode = .noShuffle
     private var _items: [MPMediaItem]
@@ -41,16 +42,23 @@ class PlaylistModel : AudioModelDelegate {
         _items = items
         _pointer = startIndex
         _delegate = delegate
+        _remoteControl = RemoteControlModel(delegate: self)
         guard let startAudio = buildAudio(withItem: _items[_pointer], playSoon: false) else {
             return nil
         }
         _playingAudio = startAudio
+        _delegate?.playingItemDidChange(_items[_pointer])
     }
 
     deinit {
         if _playingAudio.isPlaying {
             _playingAudio.stop()
         }
+    }
+
+    func releaseCache() {
+        _nextAudioCache = nil
+        _prevAudioCache = nil
     }
 
     func setRepeatMode(_ mode: RepeatMode) {
@@ -70,6 +78,9 @@ class PlaylistModel : AudioModelDelegate {
         // TODO: append and change next cache if changed
     }
 
+    /*
+     * Audio control methods
+     */
     func togglePlay() -> Bool {
         if _playingAudio.isPlaying {
             _playingAudio.pause()
@@ -89,7 +100,8 @@ class PlaylistModel : AudioModelDelegate {
         } else {
             guard case .allRepeat = _repeatMode, let firstItem = _items.first else {
                 _prevAudioCache = _playingAudio
-                return _delegate.playlistDidFinish()
+                _delegate?.playlistDidFinish()
+                return
             }
             _prevAudioCache = nil
             _playingAudio = buildAudio(withItem: firstItem, playSoon: true)
@@ -101,11 +113,10 @@ class PlaylistModel : AudioModelDelegate {
         if let callback = onNextExist {
             callback()
         }
-        _delegate.playingItemDidChange(_items[_pointer])
+        _delegate?.playingItemDidChange(_items[_pointer])
     }
 
     func prev() {
-        print(_pointer)
         let interrupting = _playingAudio.isPlaying
         guard !interrupting || _playingAudio.inBeginning else {
             return _playingAudio.cue()
@@ -127,9 +138,12 @@ class PlaylistModel : AudioModelDelegate {
         if interrupting {
             _playingAudio.play()
         }
-        _delegate.playingItemDidChange(_items[_pointer])
+        _delegate?.playingItemDidChange(_items[_pointer])
     }
 
+    /*
+     * AudioModelDelegate
+     */
     func playingAudioDidFinish(successfully flag: Bool) {
         if case .singleRepeat = _repeatMode {
             _playingAudio.cue()
@@ -138,6 +152,40 @@ class PlaylistModel : AudioModelDelegate {
         next(onNextExist: { self._playingAudio.play() })
     }
 
+    /*
+     * RemoteControlModelDelegate
+     */
+    func didReceivePlay() {
+        _playingAudio.play()
+        _delegate?.didPlayByRemote()
+    }
+
+    func didReceivePause() {
+        _playingAudio.pause()
+        _delegate?.didPauseByRemote()
+    }
+
+    func didReceiveTogglePlay() {
+        if _playingAudio.isPlaying {
+            _playingAudio.pause()
+            _delegate?.didPauseByRemote()
+        } else {
+            _playingAudio.play()
+            _delegate?.didPlayByRemote()
+        }
+    }
+
+    func didReceiveNext() {
+        next()
+    }
+
+    func didReceivePrev() {
+        prev()
+    }
+
+    /*
+     * Helper methods
+     */
     private func buildAudio(withItem item: MPMediaItem, playSoon: Bool) -> AudioModel? {
         return AudioModel(withItem: item, playSoon: !playSoon, delegate: self)
     }
