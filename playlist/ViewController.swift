@@ -56,7 +56,7 @@ class ViewController: UIViewController, PickerModelDelegate, PlaylistModelDelega
     
     @objc func controlButtonDidTouch(_ sender: AnyObject) {
         guard let playlist = _playlist else {
-            presentInformationAlert(title: "おしらせ", message: "まずは再生する音楽を選択してください。")
+            presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
         if playlist.togglePlay() {
@@ -68,22 +68,18 @@ class ViewController: UIViewController, PickerModelDelegate, PlaylistModelDelega
     
     @objc func nextButtonDidTouch(_ sender: AnyObject) {
         guard let playlist = _playlist else {
-            presentInformationAlert(title: "おしらせ", message: "まずは再生する音楽を選択してください。")
+            presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
-        if playlist.next() {
-            updateSongInformation(item: playlist.playingItem)
-        }
+        playlist.next()
     }
 
     @objc func prevButtonDidTouch(_ sender: AnyObject) {
         guard let playlist = _playlist else {
-            presentInformationAlert(title: "おしらせ", message: "まずは再生する音楽を選択してください。")
+            presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
-        if playlist.prev() {
-            updateSongInformation(item: playlist.playingItem)
-        }
+        playlist.prev()
     }
     
     /*
@@ -92,7 +88,7 @@ class ViewController: UIViewController, PickerModelDelegate, PlaylistModelDelega
     func didPickFinish(collection: MPMediaItemCollection) {
         _playlist = PlaylistModel(withItems: collection.items, startIndex: 0, delegate: self)
         guard let item = _playlist?.playingItem else {
-            presentInformationAlert(title: "おしらせ", message: "音楽のセットに失敗しました。")
+            presentInformationAlert(message: "音楽のセットに失敗しました。")
             return
         }
         updateSongInformation(item: item)
@@ -111,14 +107,16 @@ class ViewController: UIViewController, PickerModelDelegate, PlaylistModelDelega
     }
 
     func playlistDidFinish() {
+        _playlist = nil
         resetSongInformation()
+        _controlButton.setTitle(BUTTON_TEXT_PLAY, for: .normal)
     }
 
     /*
      * View control methods
      */
-    private func presentInformationAlert(title: String, message: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    private func presentInformationAlert(message: String) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
     }

@@ -41,7 +41,7 @@ class PlaylistModel : AudioModelDelegate {
         _items = items
         _pointer = startIndex
         _delegate = delegate
-        guard let startAudio = buildAudio(withItem: _items[_pointer], playSoon: true) else {
+        guard let startAudio = buildAudio(withItem: _items[_pointer], playSoon: false) else {
             return nil
         }
         _playingAudio = startAudio
@@ -79,57 +79,63 @@ class PlaylistModel : AudioModelDelegate {
         return true
     }
 
-    func next() -> Bool {
+    func next(onNextExist: ((Void) -> Void)? = nil) {
         let interrupting = _playingAudio.isPlaying
-        if interrupting {
-            _playingAudio.stop()
-        }
-        _prevAudioCache = _playingAudio
+        _playingAudio.stop()
         if let nextAudio = getCachedNext() {
+            _prevAudioCache = _playingAudio
             _playingAudio = nextAudio
             _pointer += 1
         } else {
-            guard case .allRepeat = _repeatMode else {
-                return false
+            guard case .allRepeat = _repeatMode, let firstItem = _items.first else {
+                _prevAudioCache = _playingAudio
+                return _delegate.playlistDidFinish()
             }
-            _playingAudio = buildAudio(withItem: _items[0], playSoon: true)
+            _prevAudioCache = nil
+            _playingAudio = buildAudio(withItem: firstItem, playSoon: true)
             _pointer = 0
         }
         if interrupting {
             _playingAudio.play()
         }
-        return true
+        if let callback = onNextExist {
+            callback()
+        }
+        _delegate.playingItemDidChange(_items[_pointer])
     }
 
-    func prev() -> Bool {
-        // TODO: rewind option
+    func prev() {
+        print(_pointer)
         let interrupting = _playingAudio.isPlaying
-        if interrupting {
-            _playingAudio.stop()
+        guard !interrupting || _playingAudio.inBeginning else {
+            return _playingAudio.cue()
         }
-        _nextAudioCache = _playingAudio
-        guard let prevAudio = getCachedPrev() else {
-            return false
+        _playingAudio.stop()
+        if let prevAudio = getCachedPrev() {
+            _nextAudioCache = _playingAudio
+            _playingAudio = prevAudio
+            _pointer -= 1
+        } else {
+            if case .allRepeat = _repeatMode, let lastItem = _items.last {
+                _nextAudioCache = _playingAudio
+                _playingAudio = buildAudio(withItem: lastItem, playSoon: true)
+                _pointer = _items.count - 1
+            } else {
+                _playingAudio.cue()
+            }
         }
-        _playingAudio = prevAudio
-        _pointer -= 1
         if interrupting {
             _playingAudio.play()
         }
-
-        return true
+        _delegate.playingItemDidChange(_items[_pointer])
     }
 
     func playingAudioDidFinish(successfully flag: Bool) {
         if case .singleRepeat = _repeatMode {
-            _playingAudio.begin()
+            _playingAudio.cue()
             return _playingAudio.play()
         }
-        guard next() else {
-            return _delegate.playlistDidFinish()
-        }
-        _delegate.playingItemDidChange(_items[_pointer])
-        _playingAudio.play()
+        next(onNextExist: { self._playingAudio.play() })
     }
 
     private func buildAudio(withItem item: MPMediaItem, playSoon: Bool) -> AudioModel? {
@@ -139,9 +145,11 @@ class PlaylistModel : AudioModelDelegate {
     private func getCachedNext() -> AudioModel? {
         func cacheNext() {
             let afterNextPoint = _pointer + 2
-            if afterNextPoint < _items.count {
-                _nextAudioCache = buildAudio(withItem: _items[afterNextPoint], playSoon: false)
+            guard afterNextPoint < _items.count else {
+                _nextAudioCache = nil
+                return
             }
+            _nextAudioCache = buildAudio(withItem: _items[afterNextPoint], playSoon: false)
         }
 
         if let nextAudio = _nextAudioCache {
@@ -159,9 +167,11 @@ class PlaylistModel : AudioModelDelegate {
     private func getCachedPrev() -> AudioModel? {
         func cachePrev() {
             let beforePrevPoint = _pointer - 2
-            if 0 < beforePrevPoint {
-                _prevAudioCache = buildAudio(withItem: _items[beforePrevPoint], playSoon: false)
+            guard 0 <= beforePrevPoint else {
+                _prevAudioCache = nil
+                return
             }
+            _prevAudioCache = buildAudio(withItem: _items[beforePrevPoint], playSoon: false)
         }
 
         if let prevAudio = _prevAudioCache {

@@ -18,6 +18,12 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
         get { return _player.isPlaying }
     }
 
+    var inBeginning: Bool {
+        get {
+            print(_player.currentTime)
+            return _player.currentTime < 5 }
+    }
+
     init?(withItem item: MPMediaItem, playSoon: Bool, delegate: AudioModelDelegate) {
         guard let url = item.value(forKey: MPMediaItemPropertyAssetURL) as? URL else {
             return nil
@@ -50,11 +56,11 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
     func stop() {
         // TODO: fade out option
         _player.stop()
+        _player.currentTime = 0.0
     }
     
-    func begin() {
+    func cue() {
         _player.currentTime = 0.0
-        _player.play()
     }
     
     func seek(toTime target: TimeInterval) {
