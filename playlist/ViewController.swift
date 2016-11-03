@@ -10,9 +10,8 @@ import UIKit
 import MediaPlayer
 
 class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDelegate {
-    let BUTTON_TEXT_PLAY = "▶"
-    let BUTTON_TEXT_PAUSE = "ⅠⅠ"
-    let NO_TEXT = "-"
+    private static let BUTTON_TEXT_PLAY = "▶"
+    private static let BUTTON_TEXT_PAUSE = "ⅠⅠ"
 
     // Interface Builder objects
     @IBOutlet weak var _selectButton: UIButton!
@@ -102,8 +101,8 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     /*
      * PlaylistModelDelegate
      */
-    func playingItemDidChange(_ item: MPMediaItem) {
-        updateSongInformation(item: item)
+    func playingItemDidChange(_ info: AudioInfoModel) {
+        updateSongInformation(withInfo: info)
     }
 
     func playlistDidFinish() {
@@ -140,40 +139,29 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
 
     private func updateControlButtonView(playing: Bool) {
         if playing {
-            _controlButton.setTitle(BUTTON_TEXT_PAUSE, for: .normal)
+            _controlButton.setTitle(ViewController.BUTTON_TEXT_PAUSE, for: .normal)
         } else {
-            _controlButton.setTitle(BUTTON_TEXT_PLAY, for: .normal)
+            _controlButton.setTitle(ViewController.BUTTON_TEXT_PLAY, for: .normal)
         }
     }
 
     private func resetSongInformation() {
-        _artistLabel.text = NO_TEXT
-        _titleLabel.text = NO_TEXT
-        _albumLabel.text = NO_TEXT
+        let info = AudioInfoModel()
+        _artistLabel.text = info.artist
+        _titleLabel.text = info.title
+        _albumLabel.text = info.album
         _artworkView.image = nil
     }
 
-    private func updateSongInformation(item: MPMediaItem) {
-        let artist = item.artist ?? NO_TEXT
-        let title = item.title ?? NO_TEXT
-        let album = item.albumTitle ?? NO_TEXT
-        _artistLabel.text = artist
-        _titleLabel.text = title
-        _albumLabel.text = album
-
-        var nowPlayingInfo: [String : Any] = [
-            MPMediaItemPropertyArtist: artist,
-            MPMediaItemPropertyTitle: title,
-            MPMediaItemPropertyAlbumTitle: album
-        ]
-        if let artwork = item.artwork {
+    private func updateSongInformation(withInfo info: AudioInfoModel) {
+        _artistLabel.text = info.artist
+        _titleLabel.text = info.title
+        _albumLabel.text = info.album
+        if let artwork = info.artwork {
             _artworkView.image = artwork.image(at: _artworkView.bounds.size)
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
         } else {
             _artworkView.image = nil
         }
-
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
 }
 

@@ -47,7 +47,7 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
             return nil
         }
         _playingAudio = startAudio
-        _delegate?.playingItemDidChange(_items[_pointer])
+        notifyItemDidChange()
     }
 
     deinit {
@@ -113,7 +113,7 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
         if let callback = onNextExist {
             callback()
         }
-        _delegate?.playingItemDidChange(_items[_pointer])
+        notifyItemDidChange()
     }
 
     func prev() {
@@ -138,7 +138,7 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
         if interrupting {
             _playingAudio.play()
         }
-        _delegate?.playingItemDidChange(_items[_pointer])
+        notifyItemDidChange()
     }
 
     /*
@@ -232,5 +232,11 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
         }
         cachePrev()
         return buildAudio(withItem: _items[prevPoint], playSoon: true)
+    }
+
+    private func notifyItemDidChange() {
+        let info = AudioInfoModel(ofItem: _items[_pointer])
+        _delegate?.playingItemDidChange(info)
+        _remoteControl.updateNowPlayingInfo(withInfo: info)
     }
 }

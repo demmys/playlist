@@ -10,7 +10,7 @@ import Foundation
 import MediaPlayer
 
 protocol PlaylistModelDelegate : class {
-    func playingItemDidChange(_ item: MPMediaItem)
+    func playingItemDidChange(_ info: AudioInfoModel)
     func playlistDidFinish()
     func didPlayByRemote()
     func didPauseByRemote()

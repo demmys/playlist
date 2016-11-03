@@ -23,6 +23,16 @@ class RemoteControlModel : NSObject {
         center.previousTrackCommand.addTarget(self, action: #selector(didReceivePreviousTrackCommand))
     }
 
+    deinit {
+        let center = MPRemoteCommandCenter.shared()
+        center.togglePlayPauseCommand.removeTarget(self)
+        center.playCommand.removeTarget(self)
+        center.pauseCommand.removeTarget(self)
+        center.nextTrackCommand.removeTarget(self)
+        center.previousTrackCommand.removeTarget(self)
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+    }
+
     @objc func didReceivePlayCommand(event: MPRemoteCommandEvent) {
         _delegate?.didReceivePlay()
     }
@@ -42,4 +52,15 @@ class RemoteControlModel : NSObject {
     @objc func didReceivePreviousTrackCommand(event: MPRemoteCommandEvent) {
         _delegate?.didReceivePrev()
     }
+
+    func updateNowPlayingInfo(withInfo info: AudioInfoModel) {
+        var nowPlayingInfo: [String : Any] = [
+            MPMediaItemPropertyArtist: info.artist,
+            MPMediaItemPropertyTitle: info.title,
+            MPMediaItemPropertyAlbumTitle: info.album
+        ]
+        if let artwork = info.artwork {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo    }
 }
