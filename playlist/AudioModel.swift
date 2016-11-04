@@ -22,7 +22,7 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
         get { return _player.currentTime < 5 }
     }
 
-    init?(withItem item: MPMediaItem, playSoon: Bool, delegate: AudioModelDelegate) {
+    init?(withItem item: MPMediaItem, playSoon: Bool, withDelegate delegate: AudioModelDelegate) {
         guard let url = item.value(forKey: MPMediaItemPropertyAssetURL) as? URL else {
             return nil
         }
@@ -35,6 +35,7 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
         super.init()
         _player.delegate = self
         if !playSoon {
+            // TODO: Run in parallel
             _player.prepareToPlay()
         }
     }

@@ -42,7 +42,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
         _audioSession = AudioSessionModel()
         _pickerFactory = PickerFactory(delegate: self)
 
-        UIApplication.shared.beginReceivingRemoteControlEvents()
+        // UIApplication.shared.beginReceivingRemoteControlEvents()
     }
 
     override func didReceiveMemoryWarning() {

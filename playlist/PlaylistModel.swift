@@ -187,7 +187,7 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
      * Helper methods
      */
     private func buildAudio(withItem item: MPMediaItem, playSoon: Bool) -> AudioModel? {
-        return AudioModel(withItem: item, playSoon: !playSoon, delegate: self)
+        return AudioModel(withItem: item, playSoon: playSoon, withDelegate: self)
     }
 
     private func getCachedNext() -> AudioModel? {
