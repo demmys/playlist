@@ -11,6 +11,7 @@ import MediaPlayer
 
 class RemoteControlModel : NSObject {
     private weak var _delegate: RemoteControlModelDelegate!
+    private var _seekTimer: Timer?
 
     init(delegate: RemoteControlModelDelegate) {
         super.init()
@@ -21,6 +22,8 @@ class RemoteControlModel : NSObject {
         remoteCommandCenter.pauseCommand.addTarget(self, action: #selector(didReceivePauseCommand))
         remoteCommandCenter.nextTrackCommand.addTarget(self, action: #selector(didReceiveNextTrackCommand))
         remoteCommandCenter.previousTrackCommand.addTarget(self, action: #selector(didReceivePreviousTrackCommand))
+        remoteCommandCenter.seekForwardCommand.addTarget(self, action: #selector(didReceiveSeekForwardCommand))
+        remoteCommandCenter.seekBackwardCommand.addTarget(self, action: #selector(didReceiveSeekBackwardCommand))
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(audioSessionRouteDidChange), name: .AVAudioSessionRouteChange, object: nil)
         notificationCenter.addObserver(self, selector: #selector(audioSessionDidInterrupt), name: .AVAudioSessionInterruption, object: nil)
@@ -33,6 +36,8 @@ class RemoteControlModel : NSObject {
         remoteCommandCenter.pauseCommand.removeTarget(self)
         remoteCommandCenter.nextTrackCommand.removeTarget(self)
         remoteCommandCenter.previousTrackCommand.removeTarget(self)
+        remoteCommandCenter.skipForwardCommand.removeTarget(self)
+        remoteCommandCenter.skipBackwardCommand.removeTarget(self)
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -54,6 +59,30 @@ class RemoteControlModel : NSObject {
 
     @objc func didReceivePreviousTrackCommand(event: MPRemoteCommandEvent) {
         _delegate.didReceivePrev()
+    }
+    
+    @objc func didReceiveSeekForwardCommand(event: MPSeekCommandEvent) {
+        switch event.type {
+        case .beginSeeking:
+            _seekTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                self._delegate.didSeekStepForward()
+            }
+        case .endSeeking:
+            _seekTimer?.invalidate()
+            _seekTimer = nil
+        }
+    }
+    
+    @objc func didReceiveSeekBackwardCommand(event: MPSeekCommandEvent) {
+        switch event.type {
+        case .beginSeeking:
+            _seekTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                self._delegate.didSeekStepBackward()
+            }
+        case .endSeeking:
+            _seekTimer?.invalidate()
+            _seekTimer = nil
+        }
     }
     
     @objc func audioSessionRouteDidChange(notification: NSNotification) {

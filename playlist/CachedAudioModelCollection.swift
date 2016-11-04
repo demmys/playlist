@@ -68,6 +68,13 @@ class CachedAudioModelCollection {
         _playing.audio.cue()
     }
     
+    func seek(toTime time: TimeInterval) {
+        _playing.audio.seek(toTime: time)
+    }
+    func seek(bySeconds seconds: Int, toForward forwarding: Bool) {
+        _playing.audio.seek(bySeconds: seconds, toForward: forwarding)
+    }
+    
     func stop() {
         _playing.audio.stop()
     }

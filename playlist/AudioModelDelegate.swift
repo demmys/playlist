@@ -10,4 +10,5 @@ import Foundation
 
 protocol AudioModelDelegate : class {
     func playingAudioDidFinish(successfully flag: Bool)
+    func playingAudioDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval)
 }

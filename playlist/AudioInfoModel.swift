@@ -16,17 +16,20 @@ class AudioInfoModel {
     let album: String
     let title: String
     let artwork: MPMediaItemArtwork?
+    let duration: TimeInterval
 
     init() {
         artist = AudioInfoModel.NO_TEXT
         title = AudioInfoModel.NO_TEXT
         album = AudioInfoModel.NO_TEXT
         artwork = nil
+        duration = 0
     }
     init(ofItem item: MPMediaItem) {
         artist = item.artist ?? AudioInfoModel.NO_TEXT
         title = item.title ?? AudioInfoModel.NO_TEXT
         album = item.albumTitle ?? AudioInfoModel.NO_TEXT
         artwork = item.artwork
+        duration = item.playbackDuration
     }
 }

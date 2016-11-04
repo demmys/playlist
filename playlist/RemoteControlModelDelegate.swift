@@ -14,4 +14,6 @@ protocol RemoteControlModelDelegate : class {
     func didReceiveTogglePlay()
     func didReceiveNext()
     func didReceivePrev()
+    func didSeekStepForward()
+    func didSeekStepBackward()
 }

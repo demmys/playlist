@@ -10,7 +10,8 @@ import Foundation
 import MediaPlayer
 
 protocol PlaylistModelDelegate : class {
-    func playingItemDidChange(_ info: AudioInfoModel)
+    func playingItemDidChange(info: AudioInfoModel)
+    func playingItemDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval)
     func playlistDidFinish()
     func didPlayAutomatically()
     func didPauseAutomatically()

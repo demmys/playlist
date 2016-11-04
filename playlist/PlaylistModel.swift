@@ -127,6 +127,10 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
         }
         notifyItemDidChange()
     }
+    
+    func seek(toTime time: TimeInterval) {
+        _audioCollection.seek(toTime: time)
+    }
 
     /*
      * AudioModelDelegate
@@ -137,6 +141,10 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
             return _audioCollection.play()
         }
         next { self._audioCollection.play() }
+    }
+    
+    func playingAudioDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
+        _delegate.playingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
     }
 
     /*
@@ -169,6 +177,14 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
     func didReceivePrev() {
         prev()
     }
+    
+    func didSeekStepForward() {
+        _audioCollection.seek(bySeconds: 5, toForward: true)
+    }
+    
+    func didSeekStepBackward() {
+        _audioCollection.seek(bySeconds: 5, toForward: false)
+    }
 
     /*
      * Helper methods
@@ -176,7 +192,7 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
     private func notifyItemDidChange() {
         let info = AudioInfoModel(ofItem: _audioCollection.playingItem)
         _remoteControl.updateNowPlayingInfo(withInfo: info)
-        _delegate.playingItemDidChange(info)
+        _delegate.playingItemDidChange(info: info)
     }
     
     private func notifyPlaylistDidFinish() {

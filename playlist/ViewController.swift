@@ -14,18 +14,22 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     private static let BUTTON_TEXT_PAUSE = "ⅠⅠ"
 
     // Interface Builder objects
-    @IBOutlet weak var _selectButton: UIButton!
-    @IBOutlet weak var _controlButton: UIButton!
-    @IBOutlet weak var _prevButton: UIButton!
-    @IBOutlet weak var _nextButton: UIButton!
-    @IBOutlet weak var _artworkView: UIImageView!
-    @IBOutlet weak var _albumLabel: UILabel!
-    @IBOutlet weak var _titleLabel: UILabel!
-    @IBOutlet weak var _artistLabel: UILabel!
+    @IBOutlet weak var selectButton: UIButton!
+    @IBOutlet weak var controlButton: UIButton!
+    @IBOutlet weak var prevButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var artworkView: UIImageView!
+    @IBOutlet weak var albumLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var artistLabel: UILabel!
+    @IBOutlet weak var seekSlider: UISlider!
+    @IBOutlet weak var elapsedTimeLabel: UILabel!
+    @IBOutlet weak var remainingTimeLabel: UILabel!
 
     private var _audioSession: AudioSessionModel!
     private var _pickerFactory: PickerFactory!
     private var _playlist: PlaylistModel?
+    private var _seeking: Bool = false
 
     /*
      * Lifecycle callbacks
@@ -34,10 +38,14 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
         super.viewDidLoad()
         unsetSongInformation()
 
-        _selectButton.addTarget(self, action: #selector(selectButtonDidTouch), for: .touchUpInside)
-        _controlButton.addTarget(self, action: #selector(controlButtonDidTouch), for: .touchUpInside)
-        _nextButton.addTarget(self, action: #selector(nextButtonDidTouch), for: .touchUpInside)
-        _prevButton.addTarget(self, action: #selector(prevButtonDidTouch), for: .touchUpInside)
+        selectButton.addTarget(self, action: #selector(selectButtonDidTouch), for: .touchUpInside)
+        controlButton.addTarget(self, action: #selector(controlButtonDidTouch), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(nextButtonDidTouch), for: .touchUpInside)
+        prevButton.addTarget(self, action: #selector(prevButtonDidTouch), for: .touchUpInside)
+        seekSlider.addTarget(self, action: #selector(seekSliderValueDidChange), for: .valueChanged)
+        seekSlider.addTarget(self, action: #selector(seekSliderWillBeginSeek), for: .touchDown)
+        seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpInside)
+        seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpOutside)
 
         _audioSession = AudioSessionModel()
         _pickerFactory = PickerFactory(delegate: self)
@@ -83,6 +91,24 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
         }
         playlist.prev()
     }
+    
+    @objc func seekSliderWillBeginSeek(_ sender: AnyObject) {
+        _seeking = true
+    }
+    
+    @objc func seekSliderDidEndSeek(_ sender: AnyObject) {
+        _playlist?.seek(toTime: TimeInterval(seekSlider.value))
+        _seeking = false
+    }
+    
+    @objc func seekSliderValueDidChange(_ sender: AnyObject) {
+        guard let playlist = _playlist else {
+            return
+        }
+        let currentTime = seekSlider.value
+        let wholeDuration = playlist.playingItem.playbackDuration
+        updateSeekLabel(withCurrentSeconds: detailedTimeToSeconds(currentTime), ofWholeSeconds: detailedTimeToSeconds(wholeDuration))
+    }
 
     /*
      * PickerModelDelegate
@@ -104,13 +130,23 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     /*
      * PlaylistModelDelegate
      */
-    func playingItemDidChange(_ info: AudioInfoModel) {
+    func playingItemDidChange(info: AudioInfoModel) {
         updateSongInformation(withInfo: info)
+        seekSlider.maximumValue = Float(info.duration)
+        updateSeekInformation(withCurrentTime: 0, ofWholeDuration: info.duration)
+    }
+    
+    func playingItemDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
+        if _seeking {
+            return
+        }
+        updateSeekInformation(withCurrentTime: currentTime, ofWholeDuration: wholeDuration)
     }
 
     func playlistDidFinish() {
         _playlist = nil
         unsetSongInformation()
+        unsetSeekInformation()
         updateControlButtonView(playing: false)
         _audioSession.deactivate()
     }
@@ -142,29 +178,65 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
 
     private func updateControlButtonView(playing: Bool) {
         if playing {
-            _controlButton.setTitle(ViewController.BUTTON_TEXT_PAUSE, for: .normal)
+            controlButton.setTitle(ViewController.BUTTON_TEXT_PAUSE, for: .normal)
         } else {
-            _controlButton.setTitle(ViewController.BUTTON_TEXT_PLAY, for: .normal)
+            controlButton.setTitle(ViewController.BUTTON_TEXT_PLAY, for: .normal)
         }
     }
 
     private func unsetSongInformation() {
         let info = AudioInfoModel()
-        _artistLabel.text = info.artist
-        _titleLabel.text = info.title
-        _albumLabel.text = info.album
-        _artworkView.image = nil
+        artistLabel.text = info.artist
+        titleLabel.text = info.title
+        albumLabel.text = info.album
+        artworkView.image = nil
     }
 
     private func updateSongInformation(withInfo info: AudioInfoModel) {
-        _artistLabel.text = info.artist
-        _titleLabel.text = info.title
-        _albumLabel.text = info.album
+        artistLabel.text = info.artist
+        titleLabel.text = info.title
+        albumLabel.text = info.album
         if let artwork = info.artwork {
-            _artworkView.image = artwork.image(at: _artworkView.bounds.size)
+            artworkView.image = artwork.image(at: artworkView.bounds.size)
         } else {
-            _artworkView.image = nil
+            artworkView.image = nil
         }
+    }
+    
+    private func unsetSeekInformation() {
+        elapsedTimeLabel.text = "-:--"
+        remainingTimeLabel.text = "-:--"
+        seekSlider.setValue(0, animated: false)
+        seekSlider.isEnabled = false
+    }
+    
+    private func updateSeekInformation(withCurrentTime currentTime: TimeInterval, ofWholeDuration wholeDuration: TimeInterval) {
+        updateSeekLabel(withCurrentSeconds: detailedTimeToSeconds(currentTime), ofWholeSeconds: detailedTimeToSeconds(wholeDuration))
+        seekSlider.setValue(Float(currentTime), animated: true)
+        if !seekSlider.isEnabled {
+            seekSlider.isEnabled = true
+        }
+    }
+    
+    private func updateSeekLabel(withCurrentSeconds currentSeconds: Int, ofWholeSeconds wholeSeconds: Int) {
+        elapsedTimeLabel.text = secondsToMinutesSecondsString(currentSeconds)
+        remainingTimeLabel.text = "-\(secondsToMinutesSecondsString(wholeSeconds - currentSeconds))"
+    }
+    
+    /*
+     * Helper methods
+     */
+    private func detailedTimeToSeconds(_ time: TimeInterval) -> Int {
+        return Int(ceil(time))
+    }
+    private func detailedTimeToSeconds(_ time: Float) -> Int {
+        return Int(ceil(time))
+    }
+    
+    private func secondsToMinutesSecondsString(_ seconds: Int) -> String {
+        let secPart = seconds % 60
+        let minPart = seconds / 60
+        return String(format: "%d:%02d", minPart, secPart)
     }
 }
 
