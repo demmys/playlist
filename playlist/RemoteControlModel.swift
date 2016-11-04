@@ -15,21 +15,25 @@ class RemoteControlModel : NSObject {
     init(delegate: RemoteControlModelDelegate) {
         super.init()
         _delegate = delegate
-        let center = MPRemoteCommandCenter.shared()
-        center.togglePlayPauseCommand.addTarget(self, action: #selector(didReceiveTogglePlayPauseCommand))
-        center.playCommand.addTarget(self, action: #selector(didReceivePlayCommand))
-        center.pauseCommand.addTarget(self, action: #selector(didReceivePauseCommand))
-        center.nextTrackCommand.addTarget(self, action: #selector(didReceiveNextTrackCommand))
-        center.previousTrackCommand.addTarget(self, action: #selector(didReceivePreviousTrackCommand))
+        let remoteCommandCenter = MPRemoteCommandCenter.shared()
+        remoteCommandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(didReceiveTogglePlayPauseCommand))
+        remoteCommandCenter.playCommand.addTarget(self, action: #selector(didReceivePlayCommand))
+        remoteCommandCenter.pauseCommand.addTarget(self, action: #selector(didReceivePauseCommand))
+        remoteCommandCenter.nextTrackCommand.addTarget(self, action: #selector(didReceiveNextTrackCommand))
+        remoteCommandCenter.previousTrackCommand.addTarget(self, action: #selector(didReceivePreviousTrackCommand))
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(audioSessionRouteDidChange), name: .AVAudioSessionRouteChange, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(audioSessionDidInterrupt), name: .AVAudioSessionInterruption, object: nil)
     }
 
     deinit {
-        let center = MPRemoteCommandCenter.shared()
-        center.togglePlayPauseCommand.removeTarget(self)
-        center.playCommand.removeTarget(self)
-        center.pauseCommand.removeTarget(self)
-        center.nextTrackCommand.removeTarget(self)
-        center.previousTrackCommand.removeTarget(self)
+        let remoteCommandCenter = MPRemoteCommandCenter.shared()
+        remoteCommandCenter.togglePlayPauseCommand.removeTarget(self)
+        remoteCommandCenter.playCommand.removeTarget(self)
+        remoteCommandCenter.pauseCommand.removeTarget(self)
+        remoteCommandCenter.nextTrackCommand.removeTarget(self)
+        remoteCommandCenter.previousTrackCommand.removeTarget(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     @objc func didReceivePlayCommand(event: MPRemoteCommandEvent) {
@@ -50,6 +54,34 @@ class RemoteControlModel : NSObject {
 
     @objc func didReceivePreviousTrackCommand(event: MPRemoteCommandEvent) {
         _delegate.didReceivePrev()
+    }
+    
+    @objc func audioSessionRouteDidChange(notification: NSNotification) {
+        let reasonNo = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? NSNumber
+        guard let no = reasonNo, let reason = AVAudioSessionRouteChangeReason(rawValue: no.uintValue) else {
+            _delegate.didReceivePause()
+            return
+        }
+        switch reason {
+        case .oldDeviceUnavailable:
+            _delegate.didReceivePause()
+        default:
+            break
+        }
+    }
+    
+    @objc func audioSessionDidInterrupt(notification: NSNotification) {
+        let typeNo = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber
+        guard let no = typeNo, let type = AVAudioSessionInterruptionType(rawValue: no.uintValue) else {
+            _delegate.didReceivePause()
+            return
+        }
+        switch type {
+        case .began:
+            _delegate.didReceivePause()
+        case .ended:
+            _delegate.didReceivePlay()
+        }
     }
 
     func updateNowPlayingInfo(withInfo info: AudioInfoModel) {
