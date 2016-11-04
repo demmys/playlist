@@ -80,6 +80,10 @@ class RemoteControlModel : NSObject {
         case .began:
             _delegate.didReceivePause()
         case .ended:
+            let optionNo = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? NSNumber
+            guard let no = optionNo, no.uintValue == AVAudioSessionInterruptionOptions.shouldResume.rawValue else {
+                return
+            }
             _delegate.didReceivePlay()
         }
     }
