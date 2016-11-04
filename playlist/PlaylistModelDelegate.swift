@@ -12,6 +12,6 @@ import MediaPlayer
 protocol PlaylistModelDelegate : class {
     func playingItemDidChange(_ info: AudioInfoModel)
     func playlistDidFinish()
-    func didPlayByRemote()
-    func didPauseByRemote()
+    func didPlayAutomatically()
+    func didPauseAutomatically()
 }

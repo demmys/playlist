@@ -28,7 +28,7 @@ class CachedAudioModelCollection {
         }
     }
     
-    private let _audioModelDelegate: AudioModelDelegate
+    private weak var _audioModelDelegate: AudioModelDelegate!
     private var _items: [MPMediaItem]
     private var _playing: CachedAudioModel
     private var _nextCache: CachedAudioModel?
@@ -36,6 +36,14 @@ class CachedAudioModelCollection {
     
     var playingItem: MPMediaItem {
         get { return _playing.item }
+    }
+    
+    var isPlaying: Bool {
+        get { return _playing.audio.isPlaying }
+    }
+    
+    var inBeginning: Bool {
+        get { return _playing.audio.inBeginning }
     }
     
     init?(withItems items: [MPMediaItem], startIndex: Int, withAudioModelDelegate audioModelDelegate: AudioModelDelegate) {
@@ -48,33 +56,58 @@ class CachedAudioModelCollection {
         updateCache()
     }
     
-    func next() -> AudioModel? {
+    func play() {
+        _playing.audio.play()
+    }
+    
+    func pause() {
+        _playing.audio.pause()
+    }
+    
+    func cue() {
+        _playing.audio.cue()
+    }
+    
+    func stop() {
+        _playing.audio.stop()
+    }
+    
+    func next() -> Bool {
         guard let next = _nextCache else {
-            return nil
+            return false
         }
         _prevCache = _playing
         _playing = next
         updateCache()
-        return next.audio
+        return true
     }
     
-    func prev() -> AudioModel? {
+    func prev() -> Bool {
         guard let prev = _prevCache else {
-            return nil
+            return false
         }
         _nextCache = _playing
         _playing = prev
         updateCache()
-        return prev.audio
+        return true
     }
     
-    func setPlaying(fromIndex index: Int) -> Bool {
-        guard let startAudio = CachedAudioModel(fromItems: _items, ofIndex: index, playSoon: true, withDelegate: _audioModelDelegate) else {
+    func setPlayingIndex(_ index: Int) -> Bool {
+        var actualIndex = index
+        while actualIndex < 0 {
+            actualIndex += _items.count
+        }
+        guard let startAudio = CachedAudioModel(fromItems: _items, ofIndex: actualIndex, playSoon: true, withDelegate: _audioModelDelegate) else {
             return false
         }
         _playing = startAudio
         updateCache()
         return true
+    }
+    
+    func releaseCache() {
+        _prevCache = nil
+        _nextCache = nil
     }
     
     private func updateCache() {

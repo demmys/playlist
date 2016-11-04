@@ -21,44 +21,43 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
         case allShuffle
     }
 
-    private weak var _delegate: PlaylistModelDelegate?
+    private weak var _delegate: PlaylistModelDelegate!
+    private var _audioCollection: CachedAudioModelCollection!
     private var _remoteControl: RemoteControlModel!
     private var _repeatMode: RepeatMode = .noRepeat
     private var _shuffleMode: ShuffleMode = .noShuffle
-    private var _items: [MPMediaItem]
-    private var _pointer: Int
-    private var _playingAudio: AudioModel!
-    private var _nextAudioCache: AudioModel?
-    private var _prevAudioCache: AudioModel?
 
     var playingItem: MPMediaItem {
-        get { return _items[_pointer] }
+        get { return _audioCollection.playingItem }
+    }
+    
+    var isPlaying: Bool {
+        get { return _audioCollection.isPlaying }
     }
 
-    init?(withItems items: [MPMediaItem], startIndex: Int, delegate: PlaylistModelDelegate) {
-        guard startIndex < items.count else {
+    init?(withItems items: [MPMediaItem], startIndex: Int, delegate: PlaylistModelDelegate, playNow: Bool) {
+        guard let audioCollection = CachedAudioModelCollection(withItems: items, startIndex: startIndex, withAudioModelDelegate: self) else {
             return nil
         }
-        _items = items
-        _pointer = startIndex
         _delegate = delegate
+        _audioCollection = audioCollection
         _remoteControl = RemoteControlModel(delegate: self)
-        guard let startAudio = buildAudio(withItem: _items[_pointer], playSoon: false) else {
-            return nil
-        }
-        _playingAudio = startAudio
         notifyItemDidChange()
+        if playNow {
+            _audioCollection.play()
+            _delegate.didPlayAutomatically()
+        }
     }
 
     deinit {
-        if _playingAudio.isPlaying {
-            _playingAudio.stop()
+        if _audioCollection.isPlaying {
+            _audioCollection.stop()
+            _delegate.didPauseAutomatically()
         }
     }
 
     func releaseCache() {
-        _nextAudioCache = nil
-        _prevAudioCache = nil
+        _audioCollection.releaseCache()
     }
 
     func setRepeatMode(_ mode: RepeatMode) {
@@ -82,33 +81,27 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
      * Audio control methods
      */
     func togglePlay() -> Bool {
-        if _playingAudio.isPlaying {
-            _playingAudio.pause()
+        if _audioCollection.isPlaying {
+            _audioCollection.pause()
             return false
         }
-        _playingAudio.play()
+        _audioCollection.play()
         return true
     }
 
     func next(onNextExist: ((Void) -> Void)? = nil) {
-        let interrupting = _playingAudio.isPlaying
-        _playingAudio.stop()
-        if let nextAudio = getCachedNext() {
-            _prevAudioCache = _playingAudio
-            _playingAudio = nextAudio
-            _pointer += 1
-        } else {
-            guard case .allRepeat = _repeatMode, let firstItem = _items.first else {
-                _prevAudioCache = _playingAudio
-                _delegate?.playlistDidFinish()
+        let interrupting = _audioCollection.isPlaying
+        _audioCollection.stop()
+        if !_audioCollection.next() {
+            // last track
+            guard _repeatMode == .allRepeat && _audioCollection.setPlayingIndex(0) else {
+                // do not or cannot repeat
+                notifyPlaylistDidFinish()
                 return
             }
-            _prevAudioCache = nil
-            _playingAudio = buildAudio(withItem: firstItem, playSoon: true)
-            _pointer = 0
         }
         if interrupting {
-            _playingAudio.play()
+            _audioCollection.play()
         }
         if let callback = onNextExist {
             callback()
@@ -117,26 +110,20 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
     }
 
     func prev() {
-        let interrupting = _playingAudio.isPlaying
-        guard !interrupting || _playingAudio.inBeginning else {
-            return _playingAudio.cue()
+        let interrupting = _audioCollection.isPlaying
+        guard !interrupting || _audioCollection.inBeginning else {
+            return _audioCollection.cue()
         }
-        _playingAudio.stop()
-        if let prevAudio = getCachedPrev() {
-            _nextAudioCache = _playingAudio
-            _playingAudio = prevAudio
-            _pointer -= 1
-        } else {
-            if case .allRepeat = _repeatMode, let lastItem = _items.last {
-                _nextAudioCache = _playingAudio
-                _playingAudio = buildAudio(withItem: lastItem, playSoon: true)
-                _pointer = _items.count - 1
-            } else {
-                _playingAudio.cue()
+        _audioCollection.stop()
+        if !_audioCollection.prev() {
+            // first track
+            if _repeatMode != .allRepeat || !_audioCollection.setPlayingIndex(-1) {
+                // do not or cannot repeat
+                _audioCollection.cue()
             }
         }
         if interrupting {
-            _playingAudio.play()
+            _audioCollection.play()
         }
         notifyItemDidChange()
     }
@@ -146,32 +133,32 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
      */
     func playingAudioDidFinish(successfully flag: Bool) {
         if case .singleRepeat = _repeatMode {
-            _playingAudio.cue()
-            return _playingAudio.play()
+            _audioCollection.cue()
+            return _audioCollection.play()
         }
-        next(onNextExist: { self._playingAudio.play() })
+        next { self._audioCollection.play() }
     }
 
     /*
      * RemoteControlModelDelegate
      */
     func didReceivePlay() {
-        _playingAudio.play()
-        _delegate?.didPlayByRemote()
+        _audioCollection.play()
+        _delegate.didPlayAutomatically()
     }
 
     func didReceivePause() {
-        _playingAudio.pause()
-        _delegate?.didPauseByRemote()
+        _audioCollection.pause()
+        _delegate.didPauseAutomatically()
     }
 
     func didReceiveTogglePlay() {
-        if _playingAudio.isPlaying {
-            _playingAudio.pause()
-            _delegate?.didPauseByRemote()
+        if _audioCollection.isPlaying {
+            _audioCollection.pause()
+            _delegate.didPauseAutomatically()
         } else {
-            _playingAudio.play()
-            _delegate?.didPlayByRemote()
+            _audioCollection.play()
+            _delegate.didPlayAutomatically()
         }
     }
 
@@ -186,57 +173,14 @@ class PlaylistModel : AudioModelDelegate, RemoteControlModelDelegate {
     /*
      * Helper methods
      */
-    private func buildAudio(withItem item: MPMediaItem, playSoon: Bool) -> AudioModel? {
-        return AudioModel(withItem: item, playSoon: playSoon, withDelegate: self)
-    }
-
-    private func getCachedNext() -> AudioModel? {
-        func cacheNext() {
-            let afterNextPoint = _pointer + 2
-            guard afterNextPoint < _items.count else {
-                _nextAudioCache = nil
-                return
-            }
-            _nextAudioCache = buildAudio(withItem: _items[afterNextPoint], playSoon: false)
-        }
-
-        if let nextAudio = _nextAudioCache {
-            cacheNext()
-            return nextAudio
-        }
-        let nextPoint = _pointer + 1
-        guard nextPoint < _items.count else {
-            return nil
-        }
-        cacheNext()
-        return buildAudio(withItem: _items[nextPoint], playSoon: true)
-    }
-
-    private func getCachedPrev() -> AudioModel? {
-        func cachePrev() {
-            let beforePrevPoint = _pointer - 2
-            guard 0 <= beforePrevPoint else {
-                _prevAudioCache = nil
-                return
-            }
-            _prevAudioCache = buildAudio(withItem: _items[beforePrevPoint], playSoon: false)
-        }
-
-        if let prevAudio = _prevAudioCache {
-            cachePrev()
-            return prevAudio
-        }
-        let prevPoint = _pointer - 1
-        guard 0 < prevPoint else {
-            return nil
-        }
-        cachePrev()
-        return buildAudio(withItem: _items[prevPoint], playSoon: true)
-    }
-
     private func notifyItemDidChange() {
-        let info = AudioInfoModel(ofItem: _items[_pointer])
-        _delegate?.playingItemDidChange(info)
+        let info = AudioInfoModel(ofItem: _audioCollection.playingItem)
         _remoteControl.updateNowPlayingInfo(withInfo: info)
+        _delegate.playingItemDidChange(info)
+    }
+    
+    private func notifyPlaylistDidFinish() {
+        _remoteControl.unsetNowPlayingInfo()
+        _delegate.playlistDidFinish()
     }
 }

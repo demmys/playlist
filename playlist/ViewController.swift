@@ -32,7 +32,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        resetSongInformation()
+        unsetSongInformation()
 
         _selectButton.addTarget(self, action: #selector(selectButtonDidTouch), for: .touchUpInside)
         _controlButton.addTarget(self, action: #selector(controlButtonDidTouch), for: .touchUpInside)
@@ -41,8 +41,6 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
 
         _audioSession = AudioSessionModel()
         _pickerFactory = PickerFactory(delegate: self)
-
-        // UIApplication.shared.beginReceivingRemoteControlEvents()
     }
 
     override func didReceiveMemoryWarning() {
@@ -90,7 +88,12 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
      * PickerModelDelegate
      */
     func didPickFinish(collection: MPMediaItemCollection) {
-        _playlist = PlaylistModel(withItems: collection.items, startIndex: 0, delegate: self)
+        var interrupting = false
+        if let oldPlaylist = _playlist, oldPlaylist.isPlaying {
+            interrupting = true
+            _playlist = nil
+        }
+        _playlist = PlaylistModel(withItems: collection.items, startIndex: 0, delegate: self, playNow: interrupting)
         dismissPicker()
     }
 
@@ -107,16 +110,16 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
 
     func playlistDidFinish() {
         _playlist = nil
-        resetSongInformation()
+        unsetSongInformation()
         updateControlButtonView(playing: false)
         _audioSession.deactivate()
     }
 
-    func didPlayByRemote() {
+    func didPlayAutomatically() {
         updateControlButtonView(playing: true)
     }
 
-    func didPauseByRemote() {
+    func didPauseAutomatically() {
         updateControlButtonView(playing: false)
     }
 
@@ -145,7 +148,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
         }
     }
 
-    private func resetSongInformation() {
+    private func unsetSongInformation() {
         let info = AudioInfoModel()
         _artistLabel.text = info.artist
         _titleLabel.text = info.title

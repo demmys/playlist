@@ -12,7 +12,8 @@ import MediaPlayer
 
 class AudioModel : NSObject, AVAudioPlayerDelegate {
     private let _player: AVAudioPlayer
-    private weak var _delegate: AudioModelDelegate?
+    private weak var _delegate: AudioModelDelegate!
+    private var _operationQueue: OperationQueue?
 
     var isPlaying: Bool {
         get { return _player.isPlaying }
@@ -35,9 +36,16 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
         super.init()
         _player.delegate = self
         if !playSoon {
-            // TODO: Run in parallel
-            _player.prepareToPlay()
+            let queue = OperationQueue()
+            queue.addOperation {
+                self._player.prepareToPlay()
+            }
+            _operationQueue = queue
         }
+    }
+    
+    deinit {
+        _operationQueue?.cancelAllOperations()
     }
 
     func play(withDelay delay: TimeInterval = 0) {
@@ -67,6 +75,6 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
     }
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        _delegate?.playingAudioDidFinish(successfully: flag)
+        _delegate!.playingAudioDidFinish(successfully: flag)
     }
 }

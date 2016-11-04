@@ -10,7 +10,7 @@ import Foundation
 import MediaPlayer
 
 class RemoteControlModel : NSObject {
-    private weak var _delegate: RemoteControlModelDelegate?
+    private weak var _delegate: RemoteControlModelDelegate!
 
     init(delegate: RemoteControlModelDelegate) {
         super.init()
@@ -30,27 +30,26 @@ class RemoteControlModel : NSObject {
         center.pauseCommand.removeTarget(self)
         center.nextTrackCommand.removeTarget(self)
         center.previousTrackCommand.removeTarget(self)
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
     @objc func didReceivePlayCommand(event: MPRemoteCommandEvent) {
-        _delegate?.didReceivePlay()
+        _delegate.didReceivePlay()
     }
 
     @objc func didReceivePauseCommand(event: MPRemoteCommandEvent) {
-        _delegate?.didReceivePause()
+        _delegate.didReceivePause()
     }
 
     @objc func didReceiveTogglePlayPauseCommand(event: MPRemoteCommandEvent) {
-        _delegate?.didReceiveTogglePlay()
+        _delegate.didReceiveTogglePlay()
     }
 
     @objc func didReceiveNextTrackCommand(event: MPRemoteCommandEvent) {
-        _delegate?.didReceiveNext()
+        _delegate.didReceiveNext()
     }
 
     @objc func didReceivePreviousTrackCommand(event: MPRemoteCommandEvent) {
-        _delegate?.didReceivePrev()
+        _delegate.didReceivePrev()
     }
 
     func updateNowPlayingInfo(withInfo info: AudioInfoModel) {
@@ -62,5 +61,10 @@ class RemoteControlModel : NSObject {
         if let artwork = info.artwork {
             nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
         }
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo    }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    
+    func unsetNowPlayingInfo() {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+    }
 }
