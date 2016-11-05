@@ -10,7 +10,7 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 
-class AudioModel : NSObject {
+class AudioModel : NSObject, AVAudioPlayerDelegate {
     private let _player: AVAudioPlayer
     private weak var _delegate: AudioModelDelegate!
     private var _progressTimer: Timer?
@@ -47,6 +47,7 @@ class AudioModel : NSObject {
         }
         _delegate = delegate
         super.init()
+        _player.delegate = self
         if !playSoon {
             let queue = OperationQueue()
             queue.addOperation {
@@ -59,7 +60,17 @@ class AudioModel : NSObject {
     deinit {
         _operationQueue?.cancelAllOperations()
     }
+    
+    /*
+     * AVAudioPlayerDelegate
+     */
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        endNotifyingPlayingAudioDidElapseEvent()
+    }
 
+    /*
+     * Audio control methods
+     */
     func play(withDelay delay: TimeInterval = 0) {
         if delay > 0 {
             _player.play(atTime: _player.deviceCurrentTime + delay)

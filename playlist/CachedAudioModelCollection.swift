@@ -83,16 +83,22 @@ class CachedAudioModelCollection : AudioModelDelegate {
     
     func cue() {
         _playing.audio.cue()
-        resetNextPlayTimer()
+        if isPlaying {
+            resetNextPlayTimer()
+        }
     }
     
     func seek(toTime time: TimeInterval) {
         _playing.audio.seek(toTime: time)
-        resetNextPlayTimer()
+        if isPlaying {
+            resetNextPlayTimer()
+        }
     }
     func seek(bySeconds seconds: Int, toForward forwarding: Bool) {
         _playing.audio.seek(bySeconds: seconds, toForward: forwarding)
-        resetNextPlayTimer()
+        if isPlaying {
+            resetNextPlayTimer()
+        }
     }
     
     func stop() {
@@ -233,7 +239,7 @@ class CachedAudioModelCollection : AudioModelDelegate {
         guard let nextCache = _nextCache else {
             return
         }
-        _nextPlayTimer = Timer.scheduledTimer(withTimeInterval: _playing.audio.remains, repeats: false) { _ in
+        _nextPlayTimer = Timer.scheduledTimer(withTimeInterval: _playing.audio.remains - 0.01, repeats: false) { _ in
             if case .singleRepeat = self.repeatMode {
                 self._playing.audio.cue()
             } else {
@@ -241,7 +247,7 @@ class CachedAudioModelCollection : AudioModelDelegate {
                 _ = self.changeTrackForward()
                 self._delegate.playingAudioDidChangeAutomatically(changedTo: self.playingItem)
             }
-            self.resetNextPlayTimer()
+            self.setNextPlayTimer()
         }
     }
     
