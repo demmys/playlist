@@ -10,18 +10,30 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 
-class AudioModel : NSObject, AVAudioPlayerDelegate {
+class AudioModel : NSObject {
     private let _player: AVAudioPlayer
     private weak var _delegate: AudioModelDelegate!
-    private var _timer: Timer?
+    private var _progressTimer: Timer?
     private var _operationQueue: OperationQueue?
 
     var isPlaying: Bool {
-        get { return _player.isPlaying }
+        return _player.isPlaying
     }
 
     var inBeginning: Bool {
-        get { return _player.currentTime < 5 }
+        return _player.currentTime < 5
+    }
+    
+    var currentTime: TimeInterval {
+        return _player.currentTime
+    }
+    
+    var duration: TimeInterval {
+        return _player.duration
+    }
+    
+    var remains: TimeInterval {
+        return _player.duration - _player.currentTime
     }
 
     init?(withItem item: MPMediaItem, playSoon: Bool, withDelegate delegate: AudioModelDelegate) {
@@ -35,7 +47,6 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
         }
         _delegate = delegate
         super.init()
-        _player.delegate = self
         if !playSoon {
             let queue = OperationQueue()
             queue.addOperation {
@@ -64,7 +75,6 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
     }
 
     func stop() {
-        // TODO: fade out option
         _player.stop()
         _player.currentTime = 0.0
         endNotifyingPlayingAudioDidElapseEvent()
@@ -84,19 +94,15 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
             _player.currentTime -= TimeInterval(seconds)
         }
     }
-
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        _delegate!.playingAudioDidFinish(successfully: flag)
-    }
     
     private func beginNotifyingPlayingAudioDidElapseEvent() {
-        _timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-            self._delegate.playingAudioDidElapse(currentTime: self._player.currentTime, wholeDuration: self._player.duration)
+        _progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            self._delegate.playingAudioDidElapse(sender: self)
         }
     }
     
     private func endNotifyingPlayingAudioDidElapseEvent() {
-        _timer?.invalidate()
-        _timer = nil
+        _progressTimer?.invalidate()
+        _progressTimer = nil
     }
 }

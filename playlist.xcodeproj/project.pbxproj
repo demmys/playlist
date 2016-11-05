@@ -12,6 +12,8 @@
 		1055AA671DCB76350072C42F /* RemoteControlModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055AA661DCB76350072C42F /* RemoteControlModelDelegate.swift */; };
 		1055AA691DCB91390072C42F /* AudioInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055AA681DCB91390072C42F /* AudioInfoModel.swift */; };
 		1055AA6B1DCC2A900072C42F /* CachedAudioModelCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055AA6A1DCC2A900072C42F /* CachedAudioModelCollection.swift */; };
+		10928A101DCDCA7000D49D18 /* RepeatMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10928A0F1DCDCA7000D49D18 /* RepeatMode.swift */; };
+		10928A121DCDDF8900D49D18 /* CachedAudioModelCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10928A111DCDDF8900D49D18 /* CachedAudioModelCollectionDelegate.swift */; };
 		10AD014D1DCB291B00625860 /* PickerFactoryDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AD014C1DCB291B00625860 /* PickerFactoryDelegate.swift */; };
 		10B67C6A1DBFA62E00EF1D47 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C691DBFA62E00EF1D47 /* AppDelegate.swift */; };
 		10B67C6C1DBFA62E00EF1D47 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C6B1DBFA62E00EF1D47 /* ViewController.swift */; };
@@ -50,6 +52,8 @@
 		1055AA661DCB76350072C42F /* RemoteControlModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteControlModelDelegate.swift; sourceTree = "<group>"; };
 		1055AA681DCB91390072C42F /* AudioInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInfoModel.swift; sourceTree = "<group>"; };
 		1055AA6A1DCC2A900072C42F /* CachedAudioModelCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedAudioModelCollection.swift; sourceTree = "<group>"; };
+		10928A0F1DCDCA7000D49D18 /* RepeatMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatMode.swift; sourceTree = "<group>"; };
+		10928A111DCDDF8900D49D18 /* CachedAudioModelCollectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedAudioModelCollectionDelegate.swift; sourceTree = "<group>"; };
 		10AD014C1DCB291B00625860 /* PickerFactoryDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerFactoryDelegate.swift; sourceTree = "<group>"; };
 		10B67C661DBFA62E00EF1D47 /* playlist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = playlist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10B67C691DBFA62E00EF1D47 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -131,11 +135,13 @@
 				10B67C9D1DC4753900EF1D47 /* PlaylistModel.swift */,
 				10E259ED1DC63A7C006B35DB /* PlaylistModelDelegate.swift */,
 				1055AA6A1DCC2A900072C42F /* CachedAudioModelCollection.swift */,
+				10928A111DCDDF8900D49D18 /* CachedAudioModelCollectionDelegate.swift */,
 				1055AA641DCB75E80072C42F /* RemoteControlModel.swift */,
 				1055AA661DCB76350072C42F /* RemoteControlModelDelegate.swift */,
 				10B67C9F1DC4755400EF1D47 /* AudioModel.swift */,
 				10E259EB1DC639C4006B35DB /* AudioModelDelegate.swift */,
 				1055AA681DCB91390072C42F /* AudioInfoModel.swift */,
+				10928A0F1DCDCA7000D49D18 /* RepeatMode.swift */,
 			);
 			path = playlist;
 			sourceTree = "<group>";
@@ -302,6 +308,8 @@
 				10B67C9E1DC4753900EF1D47 /* PlaylistModel.swift in Sources */,
 				10B67C9A1DC0F5EC00EF1D47 /* PickerFactory.swift in Sources */,
 				10E259EE1DC63A7C006B35DB /* PlaylistModelDelegate.swift in Sources */,
+				10928A121DCDDF8900D49D18 /* CachedAudioModelCollectionDelegate.swift in Sources */,
+				10928A101DCDCA7000D49D18 /* RepeatMode.swift in Sources */,
 				10B67C6A1DBFA62E00EF1D47 /* AppDelegate.swift in Sources */,
 				10B67CA01DC4755400EF1D47 /* AudioModel.swift in Sources */,
 				1055AA691DCB91390072C42F /* AudioInfoModel.swift in Sources */,
