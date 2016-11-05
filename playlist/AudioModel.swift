@@ -66,6 +66,7 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
      */
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         endNotifyingPlayingAudioDidElapseEvent()
+        _delegate.playingAudioDidFinish()
     }
 
     /*

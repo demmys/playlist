@@ -33,7 +33,6 @@ class CachedAudioModelCollection : AudioModelDelegate {
     private var _playing: CachedAudioModel!
     private var _nextCache: CachedAudioModel?
     private var _prevCache: CachedAudioModel?
-    private var _nextPlayTimer: Timer?
     
     var repeatMode: RepeatMode = .noRepeat
     
@@ -64,7 +63,25 @@ class CachedAudioModelCollection : AudioModelDelegate {
      */
     func playingAudioDidElapse(sender: AudioModel) {
         if sender == _playing.audio {
+            if sender.remains < 10 {
+                setNextPlayTimer()
+            }
             _delegate.playingAudioDidElapse(currentTime: sender.currentTime, wholeDuration: sender.duration)
+        }
+    }
+    
+    func playingAudioDidFinish() {
+        if repeatMode == .singleRepeat {
+            _playing.audio.cue()
+        } else {
+            guard changeTrackForward() else {
+                return _delegate.playingAudioDidFinishAutomatically()
+            }
+            // When seeked end and finish before elapse
+            if !_playing.audio.isPlaying {
+                _playing.audio.play()
+            }
+            _delegate.playingAudioDidChangeAutomatically(changedTo: playingItem)
         }
     }
     
@@ -73,7 +90,6 @@ class CachedAudioModelCollection : AudioModelDelegate {
      */
     func play() {
         _playing.audio.play()
-        setNextPlayTimer()
     }
     
     func pause() {
@@ -83,22 +99,16 @@ class CachedAudioModelCollection : AudioModelDelegate {
     
     func cue() {
         _playing.audio.cue()
-        if isPlaying {
-            resetNextPlayTimer()
-        }
+        unsetNextPlayTimer()
     }
     
     func seek(toTime time: TimeInterval) {
         _playing.audio.seek(toTime: time)
-        if isPlaying {
-            resetNextPlayTimer()
-        }
+        unsetNextPlayTimer()
     }
     func seek(bySeconds seconds: Int, toForward forwarding: Bool) {
         _playing.audio.seek(bySeconds: seconds, toForward: forwarding)
-        if isPlaying {
-            resetNextPlayTimer()
-        }
+        unsetNextPlayTimer()
     }
     
     func stop() {
@@ -108,9 +118,7 @@ class CachedAudioModelCollection : AudioModelDelegate {
     
     func next() -> Bool {
         let interrupting = isPlaying
-        if interrupting {
-            stop()
-        }
+        stop()
         guard changeTrackForward() else {
             return false
         }
@@ -122,9 +130,7 @@ class CachedAudioModelCollection : AudioModelDelegate {
     
     func prev() -> Bool {
         let interrupting = isPlaying
-        if interrupting {
-            stop()
-        }
+        stop()
         guard changeTrackBackward() else {
             return false
         }
@@ -147,17 +153,13 @@ class CachedAudioModelCollection : AudioModelDelegate {
         return true
     }
 
-    func releaseCache() {
-        _prevCache = nil
-        _nextCache = nil
-    }
-    
     /*
      * Helper methods
      */
     private func buildCachedAudioModel(ofIndex index: Int, playSoon: Bool) -> CachedAudioModel? {
         return CachedAudioModel(fromItems: _items, ofIndex: index, playSoon: playSoon, withDelegate: self)
     }
+
     private func changeTrackForward() -> Bool {
         guard let next = _nextCache else {
             return false
@@ -230,8 +232,8 @@ class CachedAudioModelCollection : AudioModelDelegate {
     }
     
     private func unsetNextPlayTimer() {
-        if let oldTimer = _nextPlayTimer, oldTimer.isValid {
-            oldTimer.invalidate()
+        if let nextCache = _nextCache, nextCache.audio.isPlaying {
+            nextCache.audio.stop()
         }
     }
     
@@ -239,20 +241,8 @@ class CachedAudioModelCollection : AudioModelDelegate {
         guard let nextCache = _nextCache else {
             return
         }
-        _nextPlayTimer = Timer.scheduledTimer(withTimeInterval: _playing.audio.remains - 0.01, repeats: false) { _ in
-            if case .singleRepeat = self.repeatMode {
-                self._playing.audio.cue()
-            } else {
-                nextCache.audio.play()
-                _ = self.changeTrackForward()
-                self._delegate.playingAudioDidChangeAutomatically(changedTo: self.playingItem)
-            }
-            self.setNextPlayTimer()
+        if !nextCache.audio.isPlaying && self.repeatMode != .singleRepeat {
+            nextCache.audio.play(withDelay: _playing.audio.remains)
         }
-    }
-    
-    private func resetNextPlayTimer() {
-        unsetNextPlayTimer()
-        setNextPlayTimer()
     }
 }

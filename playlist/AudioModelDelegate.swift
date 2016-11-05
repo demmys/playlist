@@ -10,4 +10,5 @@ import Foundation
 
 protocol AudioModelDelegate : class {
     func playingAudioDidElapse(sender: AudioModel)
+    func playingAudioDidFinish()
 }

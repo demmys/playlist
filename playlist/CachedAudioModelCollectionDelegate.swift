@@ -12,4 +12,5 @@ import MediaPlayer
 protocol CachedAudioModelCollectionDelegate : class {
     func playingAudioDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval)
     func playingAudioDidChangeAutomatically(changedTo item: MPMediaItem)
+    func playingAudioDidFinishAutomatically()
 }

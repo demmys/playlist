@@ -49,10 +49,6 @@ class PlaylistModel : CachedAudioModelCollectionDelegate, RemoteControlModelDele
         }
     }
 
-    func releaseCache() {
-        _audioCollection.releaseCache()
-    }
-
     func setRepeatMode(_ mode: RepeatMode) {
         _audioCollection.repeatMode = mode
     }
@@ -91,11 +87,10 @@ class PlaylistModel : CachedAudioModelCollectionDelegate, RemoteControlModelDele
     }
 
     func prev() {
-        if _audioCollection.prev() {
-            notifyItemDidChange()
-        } else {
+        if (_audioCollection.isPlaying && !_audioCollection.inBeginning) || !_audioCollection.prev() {
             _audioCollection.cue()
         }
+        notifyItemDidChange()
     }
     
     func seek(toTime time: TimeInterval) {
@@ -111,6 +106,10 @@ class PlaylistModel : CachedAudioModelCollectionDelegate, RemoteControlModelDele
     
     func playingAudioDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
         _delegate.playingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
+    }
+    
+    func playingAudioDidFinishAutomatically() {
+        notifyPlaylistDidFinish()
     }
 
     /*

@@ -52,7 +52,6 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     }
 
     override func didReceiveMemoryWarning() {
-        _playlist?.releaseCache()
         super.didReceiveMemoryWarning()
     }
 
