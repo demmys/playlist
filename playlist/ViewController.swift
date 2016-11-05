@@ -9,7 +9,7 @@
 import UIKit
 import MediaPlayer
 
-class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDelegate {
+class ViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerModelDelegate {
     private static let BUTTON_TEXT_PLAY = "▶"
     private static let BUTTON_TEXT_PAUSE = "ⅠⅠ"
 
@@ -28,7 +28,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
 
     private var _audioSession: AudioSessionModel!
     private var _pickerFactory: PickerFactory!
-    private var _playlist: PlaylistModel?
+    private var _playlistManager: PlaylistManagerModel?
     private var _seeking: Bool = false
 
     /*
@@ -51,10 +51,6 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
         _pickerFactory = PickerFactory(delegate: self)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
     /*
      * Interface Builder callbacks
      */
@@ -63,7 +59,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     }
 
     @objc func controlButtonDidTouch(_ sender: AnyObject) {
-        guard let playlist = _playlist else {
+        guard let playlist = _playlistManager else {
             presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
@@ -76,7 +72,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     }
 
     @objc func nextButtonDidTouch(_ sender: AnyObject) {
-        guard let playlist = _playlist else {
+        guard let playlist = _playlistManager else {
             presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
@@ -84,7 +80,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     }
 
     @objc func prevButtonDidTouch(_ sender: AnyObject) {
-        guard let playlist = _playlist else {
+        guard let playlist = _playlistManager else {
             presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
@@ -96,12 +92,12 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     }
     
     @objc func seekSliderDidEndSeek(_ sender: AnyObject) {
-        _playlist?.seek(toTime: TimeInterval(seekSlider.value))
+        _playlistManager?.seek(toTime: TimeInterval(seekSlider.value))
         _seeking = false
     }
     
     @objc func seekSliderValueDidChange(_ sender: AnyObject) {
-        guard let playlist = _playlist else {
+        guard let playlist = _playlistManager else {
             return
         }
         let currentTime = seekSlider.value
@@ -114,11 +110,11 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
      */
     func didPickFinish(collection: MPMediaItemCollection) {
         var interrupting = false
-        if let oldPlaylist = _playlist, oldPlaylist.isPlaying {
+        if let oldPlaylist = _playlistManager, oldPlaylist.isPlaying {
             interrupting = true
-            _playlist = nil
+            _playlistManager = nil
         }
-        _playlist = PlaylistModel(withItems: collection.items, startIndex: 0, delegate: self, playNow: interrupting)
+        _playlistManager = PlaylistManagerModel(withItems: collection.items, startIndex: 0, delegate: self, playNow: interrupting)
         dismissPicker()
     }
 
@@ -127,7 +123,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     }
 
     /*
-     * PlaylistModelDelegate
+     * PlaylistManagerModelDelegate
      */
     func playingItemDidChange(info: AudioInfoModel) {
         updateSongInformation(withInfo: info)
@@ -143,7 +139,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistModelDele
     }
 
     func playlistDidFinish() {
-        _playlist = nil
+        _playlistManager = nil
         unsetSongInformation()
         unsetSeekInformation()
         updateControlButtonView(playing: false)

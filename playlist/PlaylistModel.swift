@@ -2,166 +2,253 @@
 //  PlaylistModel.swift
 //  playlist
 //
-//  Created by Atsuki Demizu on 2016/10/29.
+//  Created by Atsuki Demizu on 2016/11/04.
 //  Copyright © 2016年 Atsuki Demizu. All rights reserved.
 //
 
 import Foundation
 import MediaPlayer
 
-class PlaylistModel : CachedAudioModelCollectionDelegate, RemoteControlModelDelegate {
-    enum ShuffleMode {
-        case noShuffle
-        case allShuffle
+class PlaylistModel : AudioModelDelegate {
+    struct CachedAudioModel {
+        let index: Int
+        let item: MPMediaItem
+        let audio: AudioModel
+        
+        init?(fromItems items: [MPMediaItem], ofIndex index: Int, playSoon: Bool, withDelegate delegate: AudioModelDelegate) {
+            guard 0 <= index && index < items.count else {
+                return nil
+            }
+            self.index = index
+            self.item = items[index]
+            guard let audio = AudioModel(withItem: item, playSoon: playSoon, withDelegate: delegate) else {
+                return nil
+            }
+            self.audio = audio
+        }
     }
-
+    
     private weak var _delegate: PlaylistModelDelegate!
-    private var _audioCollection: CachedAudioModelCollection!
-    private var _remoteControl: RemoteControlModel!
-    private var _shuffleMode: ShuffleMode = .noShuffle
-
+    private var _items: [MPMediaItem]
+    private var _playing: CachedAudioModel!
+    private var _nextCache: CachedAudioModel?
+    private var _prevCache: CachedAudioModel?
+    
+    var repeatMode: RepeatMode = .noRepeat {
+        didSet(mode) {
+            if mode == .allRepeat {
+                updateCache()
+            }
+        }
+    }
+    
     var playingItem: MPMediaItem {
-        get { return _audioCollection.playingItem }
+        return _playing.item
     }
     
     var isPlaying: Bool {
-        get { return _audioCollection.isPlaying }
+        return _playing.audio.isPlaying
     }
-
-    init?(withItems items: [MPMediaItem], startIndex: Int, delegate: PlaylistModelDelegate, playNow: Bool) {
-        guard let audioCollection = CachedAudioModelCollection(withItems: items, startIndex: startIndex, withDelegate: self) else {
+    
+    var inBeginning: Bool {
+        return _playing.audio.inBeginning
+    }
+    
+    init?(withItems items: [MPMediaItem], startIndex: Int, withDelegate delegate: PlaylistModelDelegate) {
+        _delegate = delegate
+        _items = items
+        guard let startAudio = buildCachedAudioModel(ofIndex: startIndex, playSoon: true) else {
             return nil
         }
-        _delegate = delegate
-        _audioCollection = audioCollection
-        _remoteControl = RemoteControlModel(delegate: self)
-        notifyItemDidChange()
-        if playNow {
-            _audioCollection.play()
-            _delegate.didPlayAutomatically()
+        _playing = startAudio
+        updateCache()
+    }
+    
+    /*
+     * AudioModelDelegate
+     */
+    func playingAudioDidElapse(sender: AudioModel) {
+        if sender == _playing.audio {
+            if sender.remains < 10 {
+                prepareNextPlay()
+            }
+            _delegate.playingAudioDidElapse(currentTime: sender.currentTime, wholeDuration: sender.duration)
         }
     }
-
-    deinit {
-        if _audioCollection.isPlaying {
-            _audioCollection.stop()
-            _delegate.didPauseAutomatically()
+    
+    func playingAudioDidFinish() {
+        if repeatMode == .singleRepeat {
+            _playing.audio.cue()
+        } else {
+            guard changeTrackForward() else {
+                return _delegate.playingAudioDidFinishAutomatically()
+            }
+            // When seeked end and finish before elapse
+            if !_playing.audio.isPlaying {
+                _playing.audio.play()
+            }
+            _delegate.playingAudioDidChangeAutomatically(changedTo: playingItem)
         }
     }
-
-    func setRepeatMode(_ mode: RepeatMode) {
-        _audioCollection.repeatMode = mode
-    }
-
-    func setShuffleMode(_ mode: ShuffleMode) {
-        _shuffleMode = mode
-        // TODO: shuffle remaining list
-    }
-
-    func insert(items: [MPMediaItem]) {
-        // TODO: insert and change next cache
-    }
-
-    func append(items: [MPMediaItem]) {
-        // TODO: append and change next cache if changed
-    }
-
+    
     /*
      * Audio control methods
      */
-    func togglePlay() -> Bool {
-        if _audioCollection.isPlaying {
-            _audioCollection.pause()
-            return false
-        }
-        _audioCollection.play()
-        return true
+    func play() {
+        _playing.audio.play()
     }
-
-    func next() {
-        if _audioCollection.next() {
-            notifyItemDidChange()
-        } else {
-            notifyPlaylistDidFinish()
-        }
+    
+    func pause() {
+        _playing.audio.pause()
+        cancelNextPlayPreparation()
     }
-
-    func prev() {
-        if (_audioCollection.isPlaying && !_audioCollection.inBeginning) || !_audioCollection.prev() {
-            _audioCollection.cue()
-        }
-        notifyItemDidChange()
+    
+    func cue() {
+        _playing.audio.cue()
+        cancelNextPlayPreparation()
     }
     
     func seek(toTime time: TimeInterval) {
-        _audioCollection.seek(toTime: time)
+        _playing.audio.seek(toTime: time)
+        cancelNextPlayPreparation()
     }
-
-    /*
-     * CachedAudioModelCollectionDelegate
-     */
-    func playingAudioDidChangeAutomatically(changedTo item: MPMediaItem) {
-        notifyItemDidChange()
+    func seek(bySeconds seconds: Int, toForward forwarding: Bool) {
+        _playing.audio.seek(bySeconds: seconds, toForward: forwarding)
+        cancelNextPlayPreparation()
     }
     
-    func playingAudioDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
-        _delegate.playingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
+    func stop() {
+        _playing.audio.stop()
+        cancelNextPlayPreparation()
     }
     
-    func playingAudioDidFinishAutomatically() {
-        notifyPlaylistDidFinish()
-    }
-
-    /*
-     * RemoteControlModelDelegate
-     */
-    func didReceivePlay() {
-        _audioCollection.play()
-        _delegate.didPlayAutomatically()
-    }
-
-    func didReceivePause() {
-        _audioCollection.pause()
-        _delegate.didPauseAutomatically()
-    }
-
-    func didReceiveTogglePlay() {
-        if _audioCollection.isPlaying {
-            _audioCollection.pause()
-            _delegate.didPauseAutomatically()
-        } else {
-            _audioCollection.play()
-            _delegate.didPlayAutomatically()
+    func next() -> Bool {
+        let interrupting = isPlaying
+        stop()
+        guard changeTrackForward() else {
+            return false
         }
-    }
-
-    func didReceiveNext() {
-        next()
-    }
-
-    func didReceivePrev() {
-        prev()
+        if interrupting {
+            play()
+        }
+        return true
     }
     
-    func didSeekStepForward() {
-        _audioCollection.seek(bySeconds: 5, toForward: true)
+    func prev() -> Bool {
+        let interrupting = isPlaying
+        stop()
+        guard changeTrackBackward() else {
+            return false
+        }
+        if interrupting {
+            play()
+        }
+        return true
     }
     
-    func didSeekStepBackward() {
-        _audioCollection.seek(bySeconds: 5, toForward: false)
+    func setPlayingIndex(_ index: Int) -> Bool {
+        var actualIndex = index
+        while actualIndex < 0 {
+            actualIndex += _items.count
+        }
+        guard let startAudio = buildCachedAudioModel(ofIndex: actualIndex, playSoon: true) else {
+            return false
+        }
+        _playing = startAudio
+        updateCache()
+        return true
     }
 
     /*
      * Helper methods
      */
-    private func notifyItemDidChange() {
-        let info = AudioInfoModel(ofItem: _audioCollection.playingItem)
-        _remoteControl.updateNowPlayingInfo(withInfo: info)
-        _delegate.playingItemDidChange(info: info)
+    private func buildCachedAudioModel(ofIndex index: Int, playSoon: Bool) -> CachedAudioModel? {
+        return CachedAudioModel(fromItems: _items, ofIndex: index, playSoon: playSoon, withDelegate: self)
+    }
+
+    private func changeTrackForward() -> Bool {
+        guard let next = _nextCache else {
+            return false
+        }
+        _prevCache = _playing
+        _playing = next
+        updateCache()
+        return true
     }
     
-    private func notifyPlaylistDidFinish() {
-        _remoteControl.unsetNowPlayingInfo()
-        _delegate.playlistDidFinish()
+    private func changeTrackBackward() -> Bool {
+        guard let prev = _prevCache else {
+            return false
+        }
+        _nextCache = _playing
+        _playing = prev
+        updateCache()
+        return true
+    }
+    
+    private func updateCache() {
+        updatePrevCache()
+        updateNextCache()
+    }
+    
+    private func updatePrevCache() {
+        func cachePrevItemAsPrev() {
+            _prevCache = buildCachedAudioModel(ofIndex: _playing.index - 1, playSoon: false)
+        }
+        func cacheLastItemAsPrev() {
+            _prevCache = buildCachedAudioModel(ofIndex: _items.count - 1, playSoon: false)
+        }
+        
+        if let prevCache = _prevCache {
+            if case .allRepeat = repeatMode, _playing.index == 0 && prevCache.index != _items.count - 1 {
+                cacheLastItemAsPrev()
+            } else if prevCache.index != _playing.index - 1 {
+                cachePrevItemAsPrev()
+            }
+        } else {
+            if case .allRepeat = repeatMode, _playing.index == 0 {
+                cacheLastItemAsPrev()
+            } else {
+                cachePrevItemAsPrev()
+            }
+        }
+    }
+    
+    private func updateNextCache() {
+        func cacheNextItemAsNext() {
+            _nextCache = buildCachedAudioModel(ofIndex: _playing.index + 1, playSoon: false)
+        }
+        func cacheFirstItemAsNext() {
+            _nextCache = buildCachedAudioModel(ofIndex: 0, playSoon: false)
+        }
+        
+        if let nextCache = _nextCache {
+            if case .allRepeat = repeatMode, _playing.index + 1 == _items.count && nextCache.index != 0 {
+                cacheFirstItemAsNext()
+            } else if nextCache.index != _playing.index + 1 {
+                cacheNextItemAsNext()
+            }
+        } else {
+            if case .allRepeat = repeatMode, _playing.index + 1 == _items.count {
+                cacheFirstItemAsNext()
+            } else {
+                cacheNextItemAsNext()
+            }
+        }
+    }
+    
+    private func cancelNextPlayPreparation() {
+        if let nextCache = _nextCache, nextCache.audio.isPlaying {
+            nextCache.audio.stop()
+        }
+    }
+    
+    private func prepareNextPlay() {
+        guard let nextCache = _nextCache else {
+            return
+        }
+        if !nextCache.audio.isPlaying && self.repeatMode != .singleRepeat {
+            nextCache.audio.play(withDelay: _playing.audio.remains)
+        }
     }
 }
