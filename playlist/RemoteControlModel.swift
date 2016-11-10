@@ -121,7 +121,8 @@ class RemoteControlModel : NSObject {
         var nowPlayingInfo: [String : Any] = [
             MPMediaItemPropertyArtist: info.artist,
             MPMediaItemPropertyTitle: info.title,
-            MPMediaItemPropertyAlbumTitle: info.album
+            MPMediaItemPropertyAlbumTitle: info.album,
+            MPMediaItemPropertyPlaybackDuration: info.duration
         ]
         if let artwork = info.artwork {
             nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork

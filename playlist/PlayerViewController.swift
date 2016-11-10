@@ -9,7 +9,7 @@
 import UIKit
 import MediaPlayer
 
-class ViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerModelDelegate {
+class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerModelDelegate {
     private static let BUTTON_TEXT_PLAY = "▶"
     private static let BUTTON_TEXT_PAUSE = "ⅠⅠ"
 
@@ -18,7 +18,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerMo
     @IBOutlet weak var controlButton: UIButton!
     @IBOutlet weak var prevButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
-    @IBOutlet weak var artworkView: UIImageView!
+    @IBOutlet weak var artworkImage: UIImageView!
     @IBOutlet weak var albumLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistLabel: UILabel!
@@ -173,9 +173,9 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerMo
 
     private func updateControlButtonView(playing: Bool) {
         if playing {
-            controlButton.setTitle(ViewController.BUTTON_TEXT_PAUSE, for: .normal)
+            controlButton.setTitle(PlayerViewController.BUTTON_TEXT_PAUSE, for: .normal)
         } else {
-            controlButton.setTitle(ViewController.BUTTON_TEXT_PLAY, for: .normal)
+            controlButton.setTitle(PlayerViewController.BUTTON_TEXT_PLAY, for: .normal)
         }
     }
 
@@ -184,7 +184,7 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerMo
         artistLabel.text = info.artist
         titleLabel.text = info.title
         albumLabel.text = info.album
-        artworkView.image = nil
+        artworkImage.image = nil
     }
 
     private func updateSongInformation(withInfo info: AudioInfoModel) {
@@ -192,9 +192,9 @@ class ViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerMo
         titleLabel.text = info.title
         albumLabel.text = info.album
         if let artwork = info.artwork {
-            artworkView.image = artwork.image(at: artworkView.bounds.size)
+            artworkImage.image = artwork.image(at: artworkImage.bounds.size)
         } else {
-            artworkView.image = nil
+            artworkImage.image = nil
         }
     }
     
