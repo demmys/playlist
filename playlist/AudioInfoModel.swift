@@ -10,26 +10,35 @@ import Foundation
 import MediaPlayer
 
 class AudioInfoModel {
-    private static let NO_TEXT = "-"
-
+    private static let NoText = "-"
+    static let EmptyAudioInfo = AudioInfoModel()
+    
+    let artwork: MPMediaItemArtwork?
     let artist: String
     let album: String
     let title: String
-    let artwork: MPMediaItemArtwork?
     let duration: TimeInterval
 
-    init() {
-        artist = AudioInfoModel.NO_TEXT
-        title = AudioInfoModel.NO_TEXT
-        album = AudioInfoModel.NO_TEXT
+    private init() {
         artwork = nil
+        artist = AudioInfoModel.NoText
+        title = AudioInfoModel.NoText
+        album = AudioInfoModel.NoText
         duration = 0
     }
+
     init(ofItem item: MPMediaItem) {
-        artist = item.artist ?? AudioInfoModel.NO_TEXT
-        title = item.title ?? AudioInfoModel.NO_TEXT
-        album = item.albumTitle ?? AudioInfoModel.NO_TEXT
         artwork = item.artwork
+        artist = item.artist ?? AudioInfoModel.NoText
+        title = item.title ?? AudioInfoModel.NoText
+        album = item.albumTitle ?? AudioInfoModel.NoText
         duration = item.playbackDuration
+    }
+    
+    func artworkImage(ofSize size: CGSize) -> UIImage? {
+        guard let mediaItemArtwork = artwork else {
+            return nil
+        }
+        return mediaItemArtwork.image(at: size)
     }
 }

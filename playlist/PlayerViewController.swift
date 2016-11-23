@@ -180,7 +180,7 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     }
 
     private func unsetSongInformation() {
-        let info = AudioInfoModel()
+        let info = AudioInfoModel.EmptyAudioInfo
         artistLabel.text = info.artist
         titleLabel.text = info.title
         albumLabel.text = info.album
@@ -191,11 +191,7 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
         artistLabel.text = info.artist
         titleLabel.text = info.title
         albumLabel.text = info.album
-        if let artwork = info.artwork {
-            artworkImage.image = artwork.image(at: artworkImage.bounds.size)
-        } else {
-            artworkImage.image = nil
-        }
+        artworkImage.image = info.artworkImage(ofSize: artworkImage.bounds.size)
     }
     
     private func unsetSeekInformation() {
