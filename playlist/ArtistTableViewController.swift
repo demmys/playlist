@@ -1,20 +1,20 @@
 //
-//  SongTableViewController.swift
+//  ArtistTableViewController.swift
 //  playlist
 //
-//  Created by Atsuki Demizu on 2016/11/06.
+//  Created by Atsuki Demizu on 2016/11/25.
 //  Copyright © 2016年 Atsuki Demizu. All rights reserved.
 //
 
 import UIKit
 import MediaPlayer
 
-class SongTableViewController : UITableViewController {
+class ArtistTableViewController : UITableViewController {
     private var _audioInfoList: AudioInfoListModel!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        _audioInfoList = AudioInfoListModel(fromQuery: MediaQueryBuilder.songs())
+        _audioInfoList = AudioInfoListModel(fromQuery: MediaQueryBuilder.artists())
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         return _audioInfoList.sectionCount
@@ -33,15 +33,14 @@ class SongTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath) as! SongTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "artistCell", for: indexPath) as! ArtistTableViewCell
         let info = _audioInfoList.get(inSection: indexPath.section, index: indexPath.row)
         setAudioInfo(info, toCell: cell)
         return cell
     }
     
-    private func setAudioInfo(_ info: AudioInfoModel, toCell cell: SongTableViewCell) {
-        cell.titleLabel.text = info.title
-        cell.artistLabel.text = info.artist
+    private func setAudioInfo(_ info: AudioInfoModel, toCell cell: ArtistTableViewCell) {
+        cell.artistLabel.text = info.albumArtist
         cell.artworkImage.image = info.artworkImage(ofSize: cell.artworkImage.bounds.size)
     }
 }

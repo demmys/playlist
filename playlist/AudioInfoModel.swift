@@ -12,26 +12,33 @@ import MediaPlayer
 class AudioInfoModel {
     private static let NoText = "-"
     static let EmptyAudioInfo = AudioInfoModel()
-    
-    let artwork: MPMediaItemArtwork?
+
+    let title: String
     let artist: String
     let album: String
-    let title: String
+    let albumArtist: String
+    let artwork: MPMediaItemArtwork?
+    let playlist: String
     let duration: TimeInterval
 
     private init() {
-        artwork = nil
-        artist = AudioInfoModel.NoText
         title = AudioInfoModel.NoText
+        artist = AudioInfoModel.NoText
         album = AudioInfoModel.NoText
+        albumArtist = AudioInfoModel.NoText
+        artwork = nil
+        playlist = AudioInfoModel.NoText
         duration = 0
     }
-
-    init(ofItem item: MPMediaItem) {
-        artwork = item.artwork
-        artist = item.artist ?? AudioInfoModel.NoText
+    
+    init(ofItem item: MPMediaItem, withInPlaylist playlistName: String? = nil) {
+        let artistInfo = item.artist ?? AudioInfoModel.NoText
         title = item.title ?? AudioInfoModel.NoText
+        artist = artistInfo
         album = item.albumTitle ?? AudioInfoModel.NoText
+        albumArtist = item.albumArtist ?? artistInfo
+        artwork = item.artwork
+        playlist = playlistName ?? AudioInfoModel.NoText
         duration = item.playbackDuration
     }
     

@@ -32,17 +32,17 @@
         <!--Artist-->
         <scene sceneID="Cbp-GT-yWD">
             <objects>
-                <tableViewController id="5Tw-nm-6oT" sceneMemberID="viewController">
+                <tableViewController id="5Tw-nm-6oT" customClass="ArtistTableViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="83" sectionHeaderHeight="28" sectionFooterHeight="28" id="QLE-qD-sDM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="artistCell" selectionStyle="default" indentationWidth="10" rowHeight="83" id="TZL-fY-uhe">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="artistCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="artistCell" rowHeight="83" id="TZL-fY-uhe" customClass="ArtistTableViewCell" customModule="playlist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="83"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TZL-fY-uhe" id="H44-cb-OEa">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="83"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mu2-Dn-Znf">
@@ -59,6 +59,8 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="artistLabel" destination="rRL-Em-paC" id="KI9-tm-plV"/>
+                                    <outlet property="artworkImage" destination="mu2-Dn-Znf" id="Ch9-TE-VYR"/>
                                     <segue destination="4d8-i0-f0h" kind="show" id="xGf-xY-fbD"/>
                                 </connections>
                             </tableViewCell>
@@ -77,17 +79,17 @@
         <!--Album-->
         <scene sceneID="2yv-fA-had">
             <objects>
-                <tableViewController id="4d8-i0-f0h" sceneMemberID="viewController">
+                <tableViewController id="4d8-i0-f0h" customClass="AlbumTableViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="255" sectionHeaderHeight="28" sectionFooterHeight="28" id="2Xv-3k-vUs">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="255" id="mIf-Kn-7kC">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="albumCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="albumCell" rowHeight="255" id="mIf-Kn-7kC" customClass="AlbumTableViewCell" customModule="playlist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="255"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mIf-Kn-7kC" id="sjD-bR-VJf">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="254"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" tableViewCell="mIf-Kn-7kC" id="sjD-bR-VJf">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="255"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hsZ-r5-Vs2">
@@ -128,6 +130,14 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="leftArtistLabel" destination="Zz4-Cf-IDM" id="O4j-ln-qZV"/>
+                                    <outlet property="leftArtworkImage" destination="hsZ-r5-Vs2" id="IOq-Y6-X0b"/>
+                                    <outlet property="leftTitleLabel" destination="ogv-Q5-hHf" id="yki-x2-c9Z"/>
+                                    <outlet property="rightArtistLabel" destination="hwi-QC-JIx" id="4V2-e7-R6C"/>
+                                    <outlet property="rightArtworkImage" destination="Xn1-pn-vXT" id="7RT-Yh-Jsp"/>
+                                    <outlet property="rightTitleLabel" destination="J76-TW-GWb" id="Aj6-hb-DAd"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -178,7 +188,6 @@
         <!--Song-->
         <scene sceneID="f4u-nU-tiM">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DVv-Df-CeC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="wMn-h0-Xhq" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Song" id="mN6-mc-DX7"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="CIl-DO-l1n">
@@ -189,6 +198,7 @@
                         <segue destination="8xO-Vn-VOi" kind="relationship" relationship="rootViewController" id="xq9-Z9-BP7"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DVv-Df-CeC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="865" y="661"/>
         </scene>
@@ -205,7 +215,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ihX-JV-EYV" id="SV0-bP-Qg2">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="81"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jKG-Ac-SuV">
@@ -252,17 +262,17 @@
         <!--Playlist-->
         <scene sceneID="vDO-Og-hgz">
             <objects>
-                <tableViewController id="Hu5-hI-BZp" sceneMemberID="viewController">
+                <tableViewController id="Hu5-hI-BZp" customClass="PlaylistTableViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" sectionHeaderHeight="28" sectionFooterHeight="28" id="6qJ-Mt-CLh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="85" id="kMs-5Z-kj7">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="playlistCell" rowHeight="85" id="kMs-5Z-kj7" customClass="PlaylistTableViewCell" customModule="playlist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="85"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kMs-5Z-kj7" id="Y7t-W8-j6E">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="84"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Poi-3D-uTL">
@@ -279,6 +289,8 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="artworkImage" destination="Poi-3D-uTL" id="14e-YT-IFD"/>
+                                    <outlet property="titleLabel" destination="o5b-Qn-a9q" id="3j2-ue-TOt"/>
                                     <segue destination="mN0-A9-8fi" kind="show" id="ajj-h9-dGl"/>
                                 </connections>
                             </tableViewCell>
@@ -356,7 +368,7 @@
                                 <rect key="frame" x="0.0" y="165" width="375" height="40"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QwI-oQ-fag" id="Gqj-17-3et">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="39"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dur-sZ-v8e">
@@ -493,7 +505,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Lud-yE-uJq"/>
+        <segue reference="xGf-xY-fbD"/>
         <segue reference="aJ8-Jn-6ec"/>
     </inferredMetricsTieBreakers>
 </document>
