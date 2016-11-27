@@ -16,6 +16,7 @@ class AlbumTableViewController : UITableViewController {
         super.viewDidLoad()
         _audioInfoList = AudioInfoListModel(fromQuery: MediaQueryBuilder.albums())
     }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return _audioInfoList.sectionCount
     }
@@ -34,23 +35,13 @@ class AlbumTableViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "albumCell", for: indexPath) as! AlbumTableViewCell
-        let infoPair = _audioInfoList.getPair(inSection: indexPath.section, index: indexPath.row)
-        setAudioInfo(infoPair, toCell: cell)
+        let (firstInfo, secondInfo) = _audioInfoList.getPair(inSection: indexPath.section, index: indexPath.row)
+        cell.setAudioInfo(first: firstInfo, second: secondInfo)
+        cell.onArtworkDidTap = onArtworkDidTap
         return cell
     }
     
-    private func setAudioInfo(_ infoPair: (AudioInfoModel, AudioInfoModel?), toCell cell: AlbumTableViewCell) {
-        cell.leftTitleLabel.text = infoPair.0.album
-        cell.leftArtistLabel.text = infoPair.0.artist
-        cell.leftArtworkImage.image = infoPair.0.artworkImage(ofSize: cell.leftArtworkImage.bounds.size)
-        if let secondInfo = infoPair.1 {
-            cell.rightTitleLabel.text = secondInfo.album
-            cell.rightArtistLabel.text = secondInfo.artist
-            cell.rightArtworkImage.image = secondInfo.artworkImage(ofSize: cell.rightArtworkImage.bounds.size)
-        } else {
-            cell.rightTitleLabel.text = ""
-            cell.rightArtistLabel.text = ""
-            cell.rightArtworkImage.image = nil
-        }
+    private func onArtworkDidTap(sender: UIView, tartgetInfo: AudioInfoModel) {
+        performSegue(withIdentifier: "showAlbum", sender: sender)
     }
 }

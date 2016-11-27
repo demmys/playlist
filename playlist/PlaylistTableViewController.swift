@@ -27,12 +27,7 @@ class PlaylistTableViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
         let info = _audioInfoList.get(inSection: indexPath.section, index: indexPath.row)
-        setAudioInfo(info, toCell: cell)
+        cell.setAudioInfo(info)
         return cell
-    }
-    
-    private func setAudioInfo(_ info: AudioInfoModel, toCell cell: PlaylistTableViewCell) {
-        cell.titleLabel.text = info.playlist
-        cell.artworkImage.image = info.artworkImage(ofSize: cell.artworkImage.bounds.size)
     }
 }

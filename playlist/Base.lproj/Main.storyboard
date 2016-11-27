@@ -74,7 +74,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AvB-1d-veH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1816.8" y="-864.01799100449784"/>
+            <point key="canvasLocation" x="1817" y="-939"/>
         </scene>
         <!--Album-->
         <scene sceneID="2yv-fA-had">
@@ -85,18 +85,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="albumCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="albumCell" rowHeight="255" id="mIf-Kn-7kC" customClass="AlbumTableViewCell" customModule="playlist" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="albumCell" selectionStyle="none" indentationWidth="10" reuseIdentifier="albumCell" rowHeight="255" id="mIf-Kn-7kC" customClass="AlbumTableViewCell" customModule="playlist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="255"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" tableViewCell="mIf-Kn-7kC" id="sjD-bR-VJf">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" tableViewCell="mIf-Kn-7kC" id="sjD-bR-VJf">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="255"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hsZ-r5-Vs2">
+                                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hsZ-r5-Vs2">
                                             <rect key="frame" x="8" y="8" width="172" height="172"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <imageView tag="2" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xn1-pn-vXT">
+                                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xn1-pn-vXT">
                                             <rect key="frame" x="195" y="8" width="172" height="172"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
@@ -146,10 +146,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Album" id="egb-TN-4vH"/>
+                    <connections>
+                        <segue destination="mN0-A9-8fi" kind="show" identifier="showAlbum" id="wD2-fx-zlc"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aH7-kj-rKD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2754" y="-864"/>
+            <point key="canvasLocation" x="2753" y="-939"/>
         </scene>
         <!--Album-->
         <scene sceneID="O8a-9B-L8E">
@@ -166,7 +169,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h9L-hC-aj5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="865" y="-1605"/>
+            <point key="canvasLocation" x="865" y="-1743"/>
         </scene>
         <!--Artist-->
         <scene sceneID="maL-gU-F8L">
@@ -183,7 +186,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c4h-zR-J38" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="866" y="-864"/>
+            <point key="canvasLocation" x="865" y="-938"/>
         </scene>
         <!--Song-->
         <scene sceneID="f4u-nU-tiM">
@@ -200,7 +203,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DVv-Df-CeC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="865" y="661"/>
+            <point key="canvasLocation" x="865" y="785"/>
         </scene>
         <!--Song-->
         <scene sceneID="4Zk-Ci-6fg">
@@ -257,7 +260,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="37j-IR-AAu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1817" y="661"/>
+            <point key="canvasLocation" x="1817" y="785"/>
         </scene>
         <!--Playlist-->
         <scene sceneID="vDO-Og-hgz">
@@ -304,7 +307,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7I9-c1-Nbz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1817" y="-92"/>
+            <point key="canvasLocation" x="1817" y="-49"/>
         </scene>
         <!--Playlist-->
         <scene sceneID="wxy-6W-nlN">
@@ -321,7 +324,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fG3-A5-7Qg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="865" y="-92"/>
+            <point key="canvasLocation" x="865" y="-48"/>
         </scene>
         <!--Table View Controller-->
         <scene sceneID="lhd-r5-sd2">
@@ -364,7 +367,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="40" id="QwI-oQ-fag">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="listSongCell" rowHeight="40" id="QwI-oQ-fag">
                                 <rect key="frame" x="0.0" y="165" width="375" height="40"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QwI-oQ-fag" id="Gqj-17-3et">
@@ -400,7 +403,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KHm-0Q-yAH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2753" y="-92"/>
+            <point key="canvasLocation" x="2753" y="-50"/>
         </scene>
         <!--Now Playing-->
         <scene sceneID="tne-QT-ifu">
@@ -501,11 +504,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2753" y="661"/>
+            <point key="canvasLocation" x="2753" y="785"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="xGf-xY-fbD"/>
-        <segue reference="aJ8-Jn-6ec"/>
+        <segue reference="wD2-fx-zlc"/>
+        <segue reference="smv-Gz-5mz"/>
     </inferredMetricsTieBreakers>
 </document>
