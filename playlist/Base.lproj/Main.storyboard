@@ -147,7 +147,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Album" id="egb-TN-4vH"/>
                     <connections>
-                        <segue destination="mN0-A9-8fi" kind="show" identifier="showAlbum" id="wD2-fx-zlc"/>
+                        <segue destination="mN0-A9-8fi" kind="show" identifier="showAlbumSongsSegue" id="wD2-fx-zlc"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aH7-kj-rKD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -294,7 +294,7 @@
                                 <connections>
                                     <outlet property="artworkImage" destination="Poi-3D-uTL" id="14e-YT-IFD"/>
                                     <outlet property="titleLabel" destination="o5b-Qn-a9q" id="3j2-ue-TOt"/>
-                                    <segue destination="mN0-A9-8fi" kind="show" id="ajj-h9-dGl"/>
+                                    <segue destination="mN0-A9-8fi" kind="show" identifier="" id="ajj-h9-dGl"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -326,10 +326,10 @@
             </objects>
             <point key="canvasLocation" x="865" y="-48"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Album Song Table View Controller-->
         <scene sceneID="lhd-r5-sd2">
             <objects>
-                <tableViewController id="mN0-A9-8fi" sceneMemberID="viewController">
+                <tableViewController id="mN0-A9-8fi" customClass="AlbumSongTableViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" id="s7n-Vf-zv9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -353,7 +353,7 @@
                                     <rect key="frame" x="142" y="72" width="225" height="27"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FvV-U2-TjP">
@@ -367,7 +367,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="listSongCell" rowHeight="40" id="QwI-oQ-fag">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="albumSongCell" rowHeight="40" id="QwI-oQ-fag" customClass="AlbumSongTableViewCell" customModule="playlist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="165" width="375" height="40"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QwI-oQ-fag" id="Gqj-17-3et">
@@ -391,6 +391,8 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="titleLabel" destination="eyA-8k-XvU" id="SLI-CM-dQv"/>
+                                    <outlet property="trackNoLabel" destination="dur-sZ-v8e" id="pkS-h9-a6p"/>
                                     <segue destination="BYZ-38-t0r" kind="show" id="smv-Gz-5mz"/>
                                 </connections>
                             </tableViewCell>
@@ -400,6 +402,12 @@
                             <outlet property="delegate" destination="mN0-A9-8fi" id="lPL-hM-bBM"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="artistLabel" destination="SDe-de-Cxn" id="Zy5-GC-JtG"/>
+                        <outlet property="artworkImage" destination="2tY-br-yNe" id="bCR-7W-n96"/>
+                        <outlet property="detailInfoLabel" destination="FvV-U2-TjP" id="zYn-MI-8ga"/>
+                        <outlet property="titleLabel" destination="mnX-Uo-N8E" id="yfa-Qo-T0G"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KHm-0Q-yAH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

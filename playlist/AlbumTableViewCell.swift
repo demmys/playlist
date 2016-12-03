@@ -19,7 +19,7 @@ class AlbumTableViewCell : UITableViewCell {
 
     private var _leftAudioInfo: AudioInfoModel!
     private var _rightAudioInfo: AudioInfoModel?
-    var onArtworkDidTap: ((UIView, AudioInfoModel) -> Void)?
+    var onArtworkDidTap: ((AudioInfoModel) -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,7 +34,7 @@ class AlbumTableViewCell : UITableViewCell {
         guard let callback = onArtworkDidTap else {
             return
         }
-        callback(leftArtworkImage, _leftAudioInfo)
+        callback(_leftAudioInfo)
     }
     
     func rightArtworkDidTap(sender: UITapGestureRecognizer) {
@@ -47,7 +47,7 @@ class AlbumTableViewCell : UITableViewCell {
         guard let info = _rightAudioInfo else {
             return
         }
-        callback(rightArtworkImage, info)
+        callback(info)
     }
     
     func setAudioInfo(first: AudioInfoModel, second: AudioInfoModel?) {

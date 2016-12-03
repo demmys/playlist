@@ -19,8 +19,10 @@ class AudioInfoModel {
     let albumArtist: String
     let hasAlbumArtist: Bool
     let artwork: MPMediaItemArtwork?
+    let genre: String
     let playlist: String
     let duration: TimeInterval
+    let trackNo: Int
 
     private init() {
         title = AudioInfoModel.NoText
@@ -29,8 +31,10 @@ class AudioInfoModel {
         albumArtist = AudioInfoModel.NoText
         hasAlbumArtist = false
         artwork = nil
+        genre = AudioInfoModel.NoText
         playlist = AudioInfoModel.NoText
         duration = 0
+        trackNo = 0
     }
     
     init(ofItem item: MPMediaItem, withInPlaylist playlistName: String? = nil) {
@@ -41,8 +45,10 @@ class AudioInfoModel {
         albumArtist = item.albumArtist ?? artistInfo
         hasAlbumArtist = item.albumArtist != nil
         artwork = item.artwork
+        genre = item.genre ?? AudioInfoModel.NoText
         playlist = playlistName ?? AudioInfoModel.NoText
         duration = item.playbackDuration
+        trackNo = item.albumTrackNumber
     }
     
     func artworkImage(ofSize size: CGSize) -> UIImage? {

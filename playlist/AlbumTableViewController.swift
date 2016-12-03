@@ -17,7 +17,7 @@ class AlbumTableViewController : UITableViewController {
         super.viewDidLoad()
         if let artist = _artist {
             let query = MediaQueryBuilder.albums(ofArtist: artist)
-            _audioInfoList = AudioInfoSectionedListModel(fromQuery: query, sortByProperty: "year", usingConverter: { $0 as? Int })
+            _audioInfoList = AudioInfoSectionedListModel(fromQuery: query, sortByProperties: ["year"], usingConverter: { $0 as? Int })
         } else {
             _audioInfoList = AudioInfoSectionedListModel(fromQuery: MediaQueryBuilder.albums())
         }
@@ -64,11 +64,29 @@ class AlbumTableViewController : UITableViewController {
         return cell
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+        switch identifier {
+        case "showAlbumSongsSegue":
+            guard let receiver = segue.destination as? AlbumSongTableViewController else {
+                return
+            }
+            guard let targetInfo = sender as? AudioInfoModel else {
+                return
+            }
+            receiver.setAlbumRepresentiveInfo(targetInfo)
+        default:
+            break
+        }
+    }
+    
     func setArtistFilter(_ artist: String) {
         _artist = artist
     }
     
-    private func onArtworkDidTap(sender: UIView, tartgetInfo: AudioInfoModel) {
-        performSegue(withIdentifier: "showAlbum", sender: sender)
+    private func onArtworkDidTap(targetInfo: AudioInfoModel) {
+        performSegue(withIdentifier: "showAlbumSongsSegue", sender: targetInfo)
     }
 }

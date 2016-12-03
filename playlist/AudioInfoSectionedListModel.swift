@@ -30,9 +30,9 @@ class AudioInfoSectionedListModel {
         return _indexTitles
     }
     
-    init<ComparableType: Comparable>(fromQuery query: MPMediaQuery, sortByProperty property: String, usingConverter converter: @escaping (Any) -> ComparableType?, ascending: Bool = true) {
+    init<ComparableType: Comparable>(fromQuery query: MPMediaQuery, sortByProperties properties: [String], usingConverter converter: @escaping (Any) -> ComparableType?, ascending: Bool = true) {
         if let collections = query.collections {
-            _collections = collections.sorted(by: collectionComparator(forProperty: property, usingConverter: converter))
+            _collections = collections.sorted(by: collectionComparator(forProperties: properties, usingConverter: converter))
         }
     }
 
@@ -76,21 +76,27 @@ class AudioInfoSectionedListModel {
         return (firstInfo, secondInfo)
     }
     
-    private func collectionComparator<ComparableType: Comparable>(forProperty property: String, usingConverter converter: @escaping (Any) -> ComparableType?) -> (MPMediaItemCollection, MPMediaItemCollection) -> Bool {
+    private func collectionComparator<ComparableType: Comparable>(forProperties properties: [String], usingConverter converter: @escaping (Any) -> ComparableType?) -> (MPMediaItemCollection, MPMediaItemCollection) -> Bool {
         return { (leftCollection, rightCollection) in
-            guard let leftValue = leftCollection.representativeItem?.value(forKey: property) else {
-                return false
+            for property in properties {
+                guard let leftValue = leftCollection.representativeItem?.value(forKey: property) else {
+                    return false
+                }
+                guard let left = converter(leftValue) else {
+                    return false
+                }
+                guard let rightValue = rightCollection.representativeItem?.value(forKey: property) else {
+                    return true
+                }
+                guard let right = converter(rightValue) else {
+                    return true
+                }
+                guard left != right else {
+                    continue
+                }
+                return left < right
             }
-            guard let left = converter(leftValue) else {
-                return false
-            }
-            guard let rightValue = rightCollection.representativeItem?.value(forKey: property) else {
-                return true
-            }
-            guard let right = converter(rightValue) else {
-                return true
-            }
-            return left <= right
+            return true
         }
     }
     

@@ -16,6 +16,7 @@ class SongTableViewController : UITableViewController {
         super.viewDidLoad()
         _audioInfoList = AudioInfoSectionedListModel(fromQuery: MediaQueryBuilder.songs())
     }
+
     override func numberOfSections(in tableView: UITableView) -> Int {
         return _audioInfoList.sectionCount
     }
