@@ -18,9 +18,15 @@ class MediaQueryBuilder {
         return query
     }
     
+    
     static func albums() -> MPMediaQuery {
         let query = MPMediaQuery.albums()
         query.addFilterPredicate(notCloudItemPredicate())
+        return query
+    }
+    static func albums(ofArtist artist: String) -> MPMediaQuery {
+        let query = MediaQueryBuilder.albums()
+        query.addFilterPredicate(albumArtistPredicate(artist))
         return query
     }
     
@@ -40,5 +46,9 @@ class MediaQueryBuilder {
     
     static private func notCloudItemPredicate() -> MPMediaPredicate {
         return MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem)
+    }
+    
+    static private func albumArtistPredicate(_ artist: String) -> MPMediaPredicate {
+        return MPMediaPropertyPredicate(value: artist, forProperty: MPMediaItemPropertyAlbumArtist)
     }
 }

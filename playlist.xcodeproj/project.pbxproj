@@ -12,7 +12,7 @@
 		1055AA671DCB76350072C42F /* RemoteControlModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055AA661DCB76350072C42F /* RemoteControlModelDelegate.swift */; };
 		1055AA691DCB91390072C42F /* AudioInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055AA681DCB91390072C42F /* AudioInfoModel.swift */; };
 		1055AA6B1DCC2A900072C42F /* PlaylistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055AA6A1DCC2A900072C42F /* PlaylistModel.swift */; };
-		108C55CE1DE5DB9100C32023 /* AudioInfoListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108C55CD1DE5DB9100C32023 /* AudioInfoListModel.swift */; };
+		108C55CE1DE5DB9100C32023 /* AudioInfoSectionedListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108C55CD1DE5DB9100C32023 /* AudioInfoSectionedListModel.swift */; };
 		108C55D01DE71C6000C32023 /* AlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108C55CF1DE71C6000C32023 /* AlbumTableViewController.swift */; };
 		108C55D21DE71E2D00C32023 /* AlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108C55D11DE71E2D00C32023 /* AlbumTableViewCell.swift */; };
 		108C55D41DE86A3900C32023 /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108C55D31DE86A3900C32023 /* PlaylistTableViewController.swift */; };
@@ -62,7 +62,7 @@
 		1055AA661DCB76350072C42F /* RemoteControlModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteControlModelDelegate.swift; sourceTree = "<group>"; };
 		1055AA681DCB91390072C42F /* AudioInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInfoModel.swift; sourceTree = "<group>"; };
 		1055AA6A1DCC2A900072C42F /* PlaylistModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistModel.swift; sourceTree = "<group>"; };
-		108C55CD1DE5DB9100C32023 /* AudioInfoListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInfoListModel.swift; sourceTree = "<group>"; };
+		108C55CD1DE5DB9100C32023 /* AudioInfoSectionedListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInfoSectionedListModel.swift; sourceTree = "<group>"; };
 		108C55CF1DE71C6000C32023 /* AlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumTableViewController.swift; sourceTree = "<group>"; };
 		108C55D11DE71E2D00C32023 /* AlbumTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumTableViewCell.swift; sourceTree = "<group>"; };
 		108C55D31DE86A3900C32023 /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
@@ -158,7 +158,7 @@
 				108C55D31DE86A3900C32023 /* PlaylistTableViewController.swift */,
 				108C55D71DE86A8000C32023 /* PlaylistTableViewCell.swift */,
 				1055AA681DCB91390072C42F /* AudioInfoModel.swift */,
-				108C55CD1DE5DB9100C32023 /* AudioInfoListModel.swift */,
+				108C55CD1DE5DB9100C32023 /* AudioInfoSectionedListModel.swift */,
 				108C55DB1DE9932000C32023 /* MediaQueryBuilder.swift */,
 			);
 			path = playlist;
@@ -342,7 +342,7 @@
 				108C55DA1DE86A8C00C32023 /* ArtistTableViewCell.swift in Sources */,
 				108C55D61DE86A5400C32023 /* ArtistTableViewController.swift in Sources */,
 				108C55D81DE86A8000C32023 /* PlaylistTableViewCell.swift in Sources */,
-				108C55CE1DE5DB9100C32023 /* AudioInfoListModel.swift in Sources */,
+				108C55CE1DE5DB9100C32023 /* AudioInfoSectionedListModel.swift in Sources */,
 				1055AA631DCB62D00072C42F /* AudioSessionModel.swift in Sources */,
 				1055AA651DCB75E80072C42F /* RemoteControlModel.swift in Sources */,
 				10E259EC1DC639C4006B35DB /* AudioModelDelegate.swift in Sources */,

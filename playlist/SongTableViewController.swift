@@ -10,11 +10,11 @@ import UIKit
 import MediaPlayer
 
 class SongTableViewController : UITableViewController {
-    private var _audioInfoList: AudioInfoListModel!
+    private var _audioInfoList: AudioInfoSectionedListModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        _audioInfoList = AudioInfoListModel(fromQuery: MediaQueryBuilder.songs())
+        _audioInfoList = AudioInfoSectionedListModel(fromQuery: MediaQueryBuilder.songs())
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         return _audioInfoList.sectionCount

@@ -61,7 +61,7 @@
                                 <connections>
                                     <outlet property="artistLabel" destination="rRL-Em-paC" id="KI9-tm-plV"/>
                                     <outlet property="artworkImage" destination="mu2-Dn-Znf" id="Ch9-TE-VYR"/>
-                                    <segue destination="4d8-i0-f0h" kind="show" id="xGf-xY-fbD"/>
+                                    <segue destination="4d8-i0-f0h" kind="show" identifier="showAlbumsSegue" id="xGf-xY-fbD"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

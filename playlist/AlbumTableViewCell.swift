@@ -55,11 +55,11 @@ class AlbumTableViewCell : UITableViewCell {
         _rightAudioInfo = second
 
         leftTitleLabel.text = first.album
-        leftArtistLabel.text = first.artist
+        leftArtistLabel.text = first.hasAlbumArtist ? first.albumArtist : first.artist
         leftArtworkImage.image = first.artworkImage(ofSize: leftArtworkImage.bounds.size)
         if let secondInfo = second {
             rightTitleLabel.text = secondInfo.album
-            rightArtistLabel.text = secondInfo.artist
+            rightArtistLabel.text = secondInfo.hasAlbumArtist ? secondInfo.albumArtist : secondInfo.artist
             rightArtworkImage.image = secondInfo.artworkImage(ofSize: rightArtworkImage.bounds.size)
         } else {
             rightTitleLabel.text = ""
