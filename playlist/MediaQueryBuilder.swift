@@ -41,10 +41,6 @@ class MediaQueryBuilder {
         return query
     }
     
-    static func playlist() -> MPMediaQuery {
-        return MPMediaQuery.playlists()
-    }
-    
     static private func musicPredicate() -> MPMediaPredicate {
         return MPMediaPropertyPredicate(value: MPMediaType.music.rawValue, forProperty: MPMediaItemPropertyMediaType)
     }

@@ -108,8 +108,7 @@ class AudioInfoSectionedListModel {
         guard let item = collection.representativeItem else {
             return nil
         }
-        let playlist = (collection as? MPMediaPlaylist)?.name
-        return AudioInfoModel(ofItem: item, withInPlaylist: playlist)
+        return AudioInfoModel(ofItem: item)
     }
     private func buildAudioInfo(fromItemOfIndex itemIndex: Int, inSection sectionIndex: Int) -> AudioInfoModel? {
         let itemSection = _collectionSections[sectionIndex]
