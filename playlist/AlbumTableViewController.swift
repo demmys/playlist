@@ -10,16 +10,16 @@ import UIKit
 import MediaPlayer
 
 class AlbumTableViewController : UITableViewController {
-    private var _audioInfoList: AudioInfoSectionedListModel!
+    private var _audioInfoList: AudioInfoSectionedAndPairedListModel!
     private var _artist: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if let artist = _artist {
             let query = MediaQueryBuilder.albums(ofArtist: artist)
-            _audioInfoList = AudioInfoSectionedListModel(fromQuery: query, sortByProperties: ["year"], usingConverter: { $0 as? Int })
+            _audioInfoList = AudioInfoSectionedAndPairedListModel(fromQuery: query, sortByProperties: ["year"], usingConverter: { $0 as? Int })
         } else {
-            _audioInfoList = AudioInfoSectionedListModel(fromQuery: MediaQueryBuilder.albums())
+            _audioInfoList = AudioInfoSectionedAndPairedListModel(fromQuery: MediaQueryBuilder.albums())
         }
     }
     

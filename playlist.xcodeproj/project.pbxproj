@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1010C57B1DF473FD00AD23D7 /* AudioInfoSectionedAndPairedListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1010C57A1DF473FD00AD23D7 /* AudioInfoSectionedAndPairedListModel.swift */; };
 		1029DC3E1DF31E64003383C2 /* AlbumSongTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029DC3D1DF31E63003383C2 /* AlbumSongTableViewController.swift */; };
 		1029DC401DF31EB3003383C2 /* AlbumSongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029DC3F1DF31EB3003383C2 /* AlbumSongTableViewCell.swift */; };
 		1055AA631DCB62D00072C42F /* AudioSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055AA621DCB62D00072C42F /* AudioSessionModel.swift */; };
@@ -61,6 +62,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1010C57A1DF473FD00AD23D7 /* AudioInfoSectionedAndPairedListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInfoSectionedAndPairedListModel.swift; sourceTree = "<group>"; };
 		1029DC3D1DF31E63003383C2 /* AlbumSongTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumSongTableViewController.swift; sourceTree = "<group>"; };
 		1029DC3F1DF31EB3003383C2 /* AlbumSongTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumSongTableViewCell.swift; sourceTree = "<group>"; };
 		1055AA621DCB62D00072C42F /* AudioSessionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioSessionModel.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				10E9C87D1DF4600500415D55 /* PlaylistSongTableViewCell.swift */,
 				108C55DB1DE9932000C32023 /* MediaQueryBuilder.swift */,
 				108C55CD1DE5DB9100C32023 /* AudioInfoSectionedListModel.swift */,
+				1010C57A1DF473FD00AD23D7 /* AudioInfoSectionedAndPairedListModel.swift */,
 				1055AA681DCB91390072C42F /* AudioInfoModel.swift */,
 			);
 			path = playlist;
@@ -375,6 +378,7 @@
 				108C55D41DE86A3900C32023 /* PlaylistTableViewController.swift in Sources */,
 				10B67CA01DC4755400EF1D47 /* AudioModel.swift in Sources */,
 				1055AA691DCB91390072C42F /* AudioInfoModel.swift in Sources */,
+				1010C57B1DF473FD00AD23D7 /* AudioInfoSectionedAndPairedListModel.swift in Sources */,
 				1055AA671DCB76350072C42F /* RemoteControlModelDelegate.swift in Sources */,
 				10E9C87E1DF4600500415D55 /* PlaylistSongTableViewCell.swift in Sources */,
 				10F233001DCEFE3900F4D5BE /* SongTableViewController.swift in Sources */,

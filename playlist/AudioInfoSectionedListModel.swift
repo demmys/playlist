@@ -18,10 +18,6 @@ class AudioInfoSectionedListModel {
         return _collections.count
     }
     
-    var pairedItemCount: Int {
-        return Int(ceil(Float(_collections.count) / 2))
-    }
-    
     var sectionCount: Int {
         return _collectionSections.count
     }
@@ -49,31 +45,12 @@ class AudioInfoSectionedListModel {
     func itemCountOfSection(atIndex index: Int) -> Int {
         return _collectionSections[index].range.length
     }
-    
-    func pairedItemCountOfSection(atIndex index: Int) -> Int {
-        return Int(ceil(Float(_collectionSections[index].range.length) / 2))
-    }
-    
+
     func get(atIndex index: Int) -> AudioInfoModel {
         return forceBuildAudioInfo(fromItemOfIndex: index)
     }
     func get(inSection sectionIndex: Int, index: Int) -> AudioInfoModel {
         return forceBuildAudioInfo(fromItemOfIndex: index, inSection: sectionIndex)
-    }
-    
-    func getPair(atIndex index: Int) -> (AudioInfoModel, AudioInfoModel?) {
-        let firstInfo = forceBuildAudioInfo(fromItemOfIndex: index * 2)
-        guard let secondInfo = buildAudioInfo(fromItemOfIndex: index * 2 + 1) else {
-            return (firstInfo, nil)
-        }
-        return (firstInfo, secondInfo)
-    }
-    func getPair(inSection sectionIndex: Int, index: Int) -> (AudioInfoModel, AudioInfoModel?) {
-        let firstInfo = forceBuildAudioInfo(fromItemOfIndex: index * 2, inSection: sectionIndex)
-        guard let secondInfo = buildAudioInfo(fromItemOfIndex: index * 2 + 1, inSection: sectionIndex) else {
-            return (firstInfo, nil)
-        }
-        return (firstInfo, secondInfo)
     }
     
     private func collectionComparator<ComparableType: Comparable>(forProperties properties: [String], usingConverter converter: @escaping (Any) -> ComparableType?) -> (MPMediaItemCollection, MPMediaItemCollection) -> Bool {
@@ -100,7 +77,7 @@ class AudioInfoSectionedListModel {
         }
     }
     
-    private func buildAudioInfo(fromItemOfIndex index: Int) -> AudioInfoModel? {
+    func buildAudioInfo(fromItemOfIndex index: Int) -> AudioInfoModel? {
         guard 0 <= index && index < _collections.count else {
             return nil
         }
@@ -110,7 +87,7 @@ class AudioInfoSectionedListModel {
         }
         return AudioInfoModel(ofItem: item)
     }
-    private func buildAudioInfo(fromItemOfIndex itemIndex: Int, inSection sectionIndex: Int) -> AudioInfoModel? {
+    func buildAudioInfo(fromItemOfIndex itemIndex: Int, inSection sectionIndex: Int) -> AudioInfoModel? {
         let itemSection = _collectionSections[sectionIndex]
         guard 0 <= itemIndex && itemIndex < itemSection.range.length else {
             return nil
@@ -118,13 +95,13 @@ class AudioInfoSectionedListModel {
         return buildAudioInfo(fromItemOfIndex: itemSection.range.location + itemIndex)
     }
     
-    private func forceBuildAudioInfo(fromItemOfIndex index: Int) -> AudioInfoModel {
+    func forceBuildAudioInfo(fromItemOfIndex index: Int) -> AudioInfoModel {
         guard let info = buildAudioInfo(fromItemOfIndex: index) else {
             return AudioInfoModel.EmptyAudioInfo
         }
         return info
     }
-    private func forceBuildAudioInfo(fromItemOfIndex itemIndex: Int, inSection sectionIndex: Int) -> AudioInfoModel {
+    func forceBuildAudioInfo(fromItemOfIndex itemIndex: Int, inSection sectionIndex: Int) -> AudioInfoModel {
         guard let info = buildAudioInfo(fromItemOfIndex: itemIndex, inSection: sectionIndex) else {
             return AudioInfoModel.EmptyAudioInfo
         }

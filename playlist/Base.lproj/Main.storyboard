@@ -80,7 +80,7 @@
         <scene sceneID="2yv-fA-had">
             <objects>
                 <tableViewController id="4d8-i0-f0h" customClass="AlbumTableViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="255" sectionHeaderHeight="28" sectionFooterHeight="28" id="2Xv-3k-vUs">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="255" sectionHeaderHeight="28" sectionFooterHeight="28" id="2Xv-3k-vUs">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -209,7 +209,7 @@
         <scene sceneID="4Zk-Ci-6fg">
             <objects>
                 <tableViewController id="8xO-Vn-VOi" customClass="SongTableViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="82" sectionHeaderHeight="28" sectionFooterHeight="28" id="L55-s9-2th">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="82" sectionHeaderHeight="28" sectionFooterHeight="28" id="L55-s9-2th">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -218,7 +218,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ihX-JV-EYV" id="SV0-bP-Qg2">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="81.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jKG-Ac-SuV">
@@ -592,7 +592,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="fUn-cV-Q2M"/>
         <segue reference="xGf-xY-fbD"/>
+        <segue reference="aJ8-Jn-6ec"/>
     </inferredMetricsTieBreakers>
 </document>
