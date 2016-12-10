@@ -36,6 +36,8 @@
 		10B67C9A1DC0F5EC00EF1D47 /* PickerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C991DC0F5EC00EF1D47 /* PickerFactory.swift */; };
 		10B67C9E1DC4753900EF1D47 /* PlaylistManagerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C9D1DC4753900EF1D47 /* PlaylistManagerModel.swift */; };
 		10B67CA01DC4755400EF1D47 /* AudioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67C9F1DC4755400EF1D47 /* AudioModel.swift */; };
+		10C449FC1DFAF3FC00BC1565 /* PlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C449FB1DFAF3FC00BC1565 /* PlayerService.swift */; };
+		10C449FE1DFB021800BC1565 /* PlaylistManagerModelDelegateWeakArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C449FD1DFB021800BC1565 /* PlaylistManagerModelDelegateWeakArray.swift */; };
 		10E259EC1DC639C4006B35DB /* AudioModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E259EB1DC639C4006B35DB /* AudioModelDelegate.swift */; };
 		10E259EE1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E259ED1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift */; };
 		10E9C87C1DF45FF500415D55 /* PlaylistSongTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E9C87B1DF45FF500415D55 /* PlaylistSongTableViewController.swift */; };
@@ -97,6 +99,8 @@
 		10B67C991DC0F5EC00EF1D47 /* PickerFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerFactory.swift; sourceTree = "<group>"; };
 		10B67C9D1DC4753900EF1D47 /* PlaylistManagerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManagerModel.swift; sourceTree = "<group>"; };
 		10B67C9F1DC4755400EF1D47 /* AudioModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModel.swift; sourceTree = "<group>"; };
+		10C449FB1DFAF3FC00BC1565 /* PlayerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerService.swift; sourceTree = "<group>"; };
+		10C449FD1DFB021800BC1565 /* PlaylistManagerModelDelegateWeakArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManagerModelDelegateWeakArray.swift; sourceTree = "<group>"; };
 		10E259EB1DC639C4006B35DB /* AudioModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModelDelegate.swift; sourceTree = "<group>"; };
 		10E259ED1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManagerModelDelegate.swift; sourceTree = "<group>"; };
 		10E9C87B1DF45FF500415D55 /* PlaylistSongTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistSongTableViewController.swift; sourceTree = "<group>"; };
@@ -159,6 +163,9 @@
 				10B67C701DBFA62E00EF1D47 /* Assets.xcassets */,
 				10B67C721DBFA62E00EF1D47 /* LaunchScreen.storyboard */,
 				10B67C751DBFA62E00EF1D47 /* Info.plist */,
+				10B67C991DC0F5EC00EF1D47 /* PickerFactory.swift */,
+				10AD014C1DCB291B00625860 /* PickerFactoryDelegate.swift */,
+				10B67C6B1DBFA62E00EF1D47 /* PlayerViewController.swift */,
 				108C55D51DE86A5400C32023 /* ArtistTableViewController.swift */,
 				108C55D91DE86A8C00C32023 /* ArtistTableViewCell.swift */,
 				108C55CF1DE71C6000C32023 /* AlbumTableViewController.swift */,
@@ -200,16 +207,15 @@
 		10F232FE1DCEF36300F4D5BE /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				10B67C6B1DBFA62E00EF1D47 /* PlayerViewController.swift */,
-				1055AA621DCB62D00072C42F /* AudioSessionModel.swift */,
-				10B67C991DC0F5EC00EF1D47 /* PickerFactory.swift */,
-				10AD014C1DCB291B00625860 /* PickerFactoryDelegate.swift */,
+				10C449FB1DFAF3FC00BC1565 /* PlayerService.swift */,
 				10B67C9D1DC4753900EF1D47 /* PlaylistManagerModel.swift */,
 				10E259ED1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift */,
+				10C449FD1DFB021800BC1565 /* PlaylistManagerModelDelegateWeakArray.swift */,
 				1055AA6A1DCC2A900072C42F /* PlaylistModel.swift */,
 				10928A111DCDDF8900D49D18 /* PlaylistModelDelegate.swift */,
-				10E259EB1DC639C4006B35DB /* AudioModelDelegate.swift */,
 				10B67C9F1DC4755400EF1D47 /* AudioModel.swift */,
+				10E259EB1DC639C4006B35DB /* AudioModelDelegate.swift */,
+				1055AA621DCB62D00072C42F /* AudioSessionModel.swift */,
 				1055AA641DCB75E80072C42F /* RemoteControlModel.swift */,
 				1055AA661DCB76350072C42F /* RemoteControlModelDelegate.swift */,
 				10928A0F1DCDCA7000D49D18 /* RepeatMode.swift */,
@@ -363,11 +369,13 @@
 				1055AA651DCB75E80072C42F /* RemoteControlModel.swift in Sources */,
 				10E259EC1DC639C4006B35DB /* AudioModelDelegate.swift in Sources */,
 				10B67C6C1DBFA62E00EF1D47 /* PlayerViewController.swift in Sources */,
+				10C449FC1DFAF3FC00BC1565 /* PlayerService.swift in Sources */,
 				10AD014D1DCB291B00625860 /* PickerFactoryDelegate.swift in Sources */,
 				1029DC401DF31EB3003383C2 /* AlbumSongTableViewCell.swift in Sources */,
 				10B67C9E1DC4753900EF1D47 /* PlaylistManagerModel.swift in Sources */,
 				10B67C9A1DC0F5EC00EF1D47 /* PickerFactory.swift in Sources */,
 				10E259EE1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift in Sources */,
+				10C449FE1DFB021800BC1565 /* PlaylistManagerModelDelegateWeakArray.swift in Sources */,
 				10928A121DCDDF8900D49D18 /* PlaylistModelDelegate.swift in Sources */,
 				10928A101DCDCA7000D49D18 /* RepeatMode.swift in Sources */,
 				10B67C6A1DBFA62E00EF1D47 /* AppDelegate.swift in Sources */,

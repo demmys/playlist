@@ -109,7 +109,7 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
     
     private func beginNotifyingPlayingAudioDidElapseEvent() {
         _progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-            self._delegate.playingAudioDidElapse(sender: self)
+            self._delegate.playingAudioTimeDidElapse(sender: self)
         }
     }
     

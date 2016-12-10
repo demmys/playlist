@@ -133,4 +133,8 @@ class RemoteControlModel : NSObject {
     func unsetNowPlayingInfo() {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
+    
+    func updateElapsedPlaybackTime(_ time: TimeInterval) {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
+    }
 }

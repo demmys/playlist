@@ -15,8 +15,9 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
         case allShuffle
     }
 
-    private weak var _delegate: PlaylistManagerModelDelegate!
+    private var _delegates = PlaylistManagerModelDelegateWeakArray()
     private var _playlist: PlaylistModel!
+    private var _audioSession: AudioSessionModel!
     private var _remoteControl: RemoteControlModel!
     private var _shuffleMode: ShuffleMode = .noShuffle
 
@@ -28,25 +29,26 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
         get { return _playlist.isPlaying }
     }
 
-    init?(withItems items: [MPMediaItem], startIndex: Int, delegate: PlaylistManagerModelDelegate, playNow: Bool) {
+    init?(withItems items: [MPMediaItem], startIndex: Int, usingDelegate delegate: PlaylistManagerModelDelegate) {
         guard let audioCollection = PlaylistModel(withItems: items, startIndex: startIndex, withDelegate: self) else {
             return nil
         }
-        _delegate = delegate
         _playlist = audioCollection
+        _audioSession = AudioSessionModel()
         _remoteControl = RemoteControlModel(delegate: self)
+        addDelegate(delegate)
         notifyItemDidChange()
-        if playNow {
-            _playlist.play()
-            _delegate.didPlayAutomatically()
-        }
     }
 
     deinit {
         if _playlist.isPlaying {
             _playlist.stop()
-            _delegate.didPauseAutomatically()
+            notifyPause()
         }
+    }
+    
+    func addDelegate(_ delegate: PlaylistManagerModelDelegate) {
+        _delegates.append(delegate)
     }
 
     func setRepeatMode(_ mode: RepeatMode) {
@@ -69,13 +71,14 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
     /*
      * Audio control methods
      */
-    func togglePlay() -> Bool {
+    func togglePlay() {
         if _playlist.isPlaying {
             _playlist.pause()
-            return false
+            notifyPause()
+        } else {
+            _playlist.play()
+            notifyPlay()
         }
-        _playlist.play()
-        return true
     }
 
     func next() {
@@ -100,12 +103,12 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
     /*
      * PlaylistModelDelegate
      */
+    func playingAudioTimeDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
+        notifyPlayingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
+    }
+
     func playingAudioDidChangeAutomatically(changedTo item: MPMediaItem) {
         notifyItemDidChange()
-    }
-    
-    func playingAudioDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
-        _delegate.playingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
     }
     
     func playingAudioDidFinishAutomatically() {
@@ -117,21 +120,21 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
      */
     func didReceivePlay() {
         _playlist.play()
-        _delegate.didPlayAutomatically()
+        notifyPlay()
     }
 
     func didReceivePause() {
         _playlist.pause()
-        _delegate.didPauseAutomatically()
+        notifyPause()
     }
 
     func didReceiveTogglePlay() {
         if _playlist.isPlaying {
             _playlist.pause()
-            _delegate.didPauseAutomatically()
+            notifyPause()
         } else {
             _playlist.play()
-            _delegate.didPlayAutomatically()
+            notifyPlay()
         }
     }
 
@@ -154,14 +157,39 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
     /*
      * Helper methods
      */
+    private func notifyPlay() {
+        _audioSession.activate()
+        for delegate in _delegates {
+            delegate.didPlay()
+        }
+    }
+
+    private func notifyPause() {
+        for delegate in _delegates {
+            delegate.didPause()
+        }
+    }
+
     private func notifyItemDidChange() {
         let info = AudioInfoModel(ofItem: _playlist.playingItem)
         _remoteControl.updateNowPlayingInfo(withInfo: info)
-        _delegate.playingItemDidChange(info: info)
+        for delegate in _delegates {
+            delegate.playingItemDidChange(info: info)
+        }
     }
     
     private func notifyPlaylistDidFinish() {
         _remoteControl.unsetNowPlayingInfo()
-        _delegate.playlistDidFinish()
+        _audioSession.deactivate()
+        for delegate in _delegates {
+            delegate.playlistDidFinish()
+        }
+    }
+    
+    private func notifyPlayingItemDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
+        _remoteControl.updateElapsedPlaybackTime(currentTime)
+        for delegate in _delegates {
+            delegate.playingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
+        }
     }
 }

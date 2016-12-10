@@ -26,9 +26,7 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     @IBOutlet weak var elapsedTimeLabel: UILabel!
     @IBOutlet weak var remainingTimeLabel: UILabel!
 
-    private var _audioSession: AudioSessionModel!
     private var _pickerFactory: PickerFactory!
-    private var _playlistManager: PlaylistManagerModel?
     private var _seeking: Bool = false
 
     /*
@@ -47,7 +45,6 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpInside)
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpOutside)
 
-        _audioSession = AudioSessionModel()
         _pickerFactory = PickerFactory(delegate: self)
     }
 
@@ -59,20 +56,15 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     }
 
     @objc func controlButtonDidTouch(_ sender: AnyObject) {
-        guard let playlist = _playlistManager else {
+        guard let playlist = PlayerService.shared.playlist else {
             presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
-        if playlist.togglePlay() {
-            _audioSession.activate()
-            updateControlButtonView(playing: true)
-        } else {
-            updateControlButtonView(playing: false)
-        }
+        playlist.togglePlay()
     }
 
     @objc func nextButtonDidTouch(_ sender: AnyObject) {
-        guard let playlist = _playlistManager else {
+        guard let playlist = PlayerService.shared.playlist else {
             presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
@@ -80,7 +72,7 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     }
 
     @objc func prevButtonDidTouch(_ sender: AnyObject) {
-        guard let playlist = _playlistManager else {
+        guard let playlist = PlayerService.shared.playlist else {
             presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
@@ -92,12 +84,12 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     }
     
     @objc func seekSliderDidEndSeek(_ sender: AnyObject) {
-        _playlistManager?.seek(toTime: TimeInterval(seekSlider.value))
+        PlayerService.shared.playlist?.seek(toTime: TimeInterval(seekSlider.value))
         _seeking = false
     }
     
     @objc func seekSliderValueDidChange(_ sender: AnyObject) {
-        guard let playlist = _playlistManager else {
+        guard let playlist = PlayerService.shared.playlist else {
             return
         }
         let currentTime = seekSlider.value
@@ -110,11 +102,14 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
      */
     func didPickFinish(collection: MPMediaItemCollection) {
         var interrupting = false
-        if let oldPlaylist = _playlistManager, oldPlaylist.isPlaying {
+        if let oldPlaylist = PlayerService.shared.playlist, oldPlaylist.isPlaying {
             interrupting = true
-            _playlistManager = nil
+            PlayerService.shared.destructPlaylist()
         }
-        _playlistManager = PlaylistManagerModel(withItems: collection.items, startIndex: 0, delegate: self, playNow: interrupting)
+        PlayerService.shared.buildPlaylist(withItems: collection.items, startIndex: 0, usingDelegate: self)
+        if interrupting {
+            PlayerService.shared.playlist?.togglePlay()
+        }
         dismissPicker()
     }
 
@@ -139,18 +134,17 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     }
 
     func playlistDidFinish() {
-        _playlistManager = nil
+        PlayerService.shared.destructPlaylist()
         unsetSongInformation()
         unsetSeekInformation()
         updateControlButtonView(playing: false)
-        _audioSession.deactivate()
     }
 
-    func didPlayAutomatically() {
+    func didPlay() {
         updateControlButtonView(playing: true)
     }
 
-    func didPauseAutomatically() {
+    func didPause() {
         updateControlButtonView(playing: false)
     }
 

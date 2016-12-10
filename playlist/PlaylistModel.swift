@@ -67,12 +67,12 @@ class PlaylistModel : AudioModelDelegate {
     /*
      * AudioModelDelegate
      */
-    func playingAudioDidElapse(sender: AudioModel) {
+    func playingAudioTimeDidElapse(sender: AudioModel) {
         if sender == _playing.audio {
             if sender.remains < 10 {
                 prepareNextPlay()
             }
-            _delegate.playingAudioDidElapse(currentTime: sender.currentTime, wholeDuration: sender.duration)
+            _delegate.playingAudioTimeDidElapse(currentTime: sender.currentTime, wholeDuration: sender.duration)
         }
     }
     
