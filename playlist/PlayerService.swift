@@ -16,6 +16,10 @@ class PlayerService {
     var playlist: PlaylistManagerModel? {
         return _playlistManager
     }
+
+    var hasPlaylist: Bool {
+        return _playlistManager != nil
+    }
     
     func startPlaylist(ofItems items: [MPMediaItem], startIndex: Int) {
         if let oldPlaylist = _playlistManager, oldPlaylist.isPlaying {

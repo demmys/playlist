@@ -9,12 +9,12 @@
 import UIKit
 import MediaPlayer
 
-class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistManagerModelDelegate {
+class PlayerViewController: UIViewController, PlaylistManagerModelDelegate {
     private static let BUTTON_TEXT_PLAY = "▶"
     private static let BUTTON_TEXT_PAUSE = "ⅠⅠ"
 
     // Interface Builder objects
-    @IBOutlet weak var selectButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var controlButton: UIButton!
     @IBOutlet weak var prevButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
@@ -26,7 +26,6 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     @IBOutlet weak var elapsedTimeLabel: UILabel!
     @IBOutlet weak var remainingTimeLabel: UILabel!
 
-    private var _pickerFactory: PickerFactory!
     private var _seeking: Bool = false
 
     /*
@@ -34,9 +33,8 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        unsetSongInformation()
 
-        selectButton.addTarget(self, action: #selector(selectButtonDidTouch), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(closeButtonDidTouch), for: .touchUpInside)
         controlButton.addTarget(self, action: #selector(controlButtonDidTouch), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonDidTouch), for: .touchUpInside)
         prevButton.addTarget(self, action: #selector(prevButtonDidTouch), for: .touchUpInside)
@@ -44,8 +42,6 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
         seekSlider.addTarget(self, action: #selector(seekSliderWillBeginSeek), for: .touchDown)
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpInside)
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpOutside)
-
-        _pickerFactory = PickerFactory(delegate: self)
         
         if let playlist = PlayerService.shared.playlist {
             playlist.addDelegate(self)
@@ -55,13 +51,12 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     /*
      * Interface Builder callbacks
      */
-    @objc func selectButtonDidTouch(_ sender: AnyObject) {
-        presentPicker()
+    @objc func closeButtonDidTouch(_ sender: AnyObject) {
+        dismiss(animated: true, completion: nil)
     }
 
     @objc func controlButtonDidTouch(_ sender: AnyObject) {
         guard let playlist = PlayerService.shared.playlist else {
-            presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
         playlist.togglePlay()
@@ -69,7 +64,6 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
 
     @objc func nextButtonDidTouch(_ sender: AnyObject) {
         guard let playlist = PlayerService.shared.playlist else {
-            presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
         playlist.next()
@@ -77,7 +71,6 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
 
     @objc func prevButtonDidTouch(_ sender: AnyObject) {
         guard let playlist = PlayerService.shared.playlist else {
-            presentInformationAlert(message: "まずは再生する音楽を選択してください。")
             return
         }
         playlist.prev()
@@ -102,19 +95,6 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     }
 
     /*
-     * PickerModelDelegate
-     */
-    func didPickFinish(collection: MPMediaItemCollection) {
-        PlayerService.shared.startPlaylist(ofItems: collection.items, startIndex: 0)
-        PlayerService.shared.playlist?.addDelegate(self)
-        dismissPicker()
-    }
-
-    func didPickCancel() {
-        dismissPicker()
-    }
-
-    /*
      * PlaylistManagerModelDelegate
      */
     func playingItemDidChange(info: AudioInfoModel) {
@@ -132,9 +112,7 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
 
     func playlistDidFinish() {
         PlayerService.shared.finishPlaylist()
-        unsetSongInformation()
-        unsetSeekInformation()
-        updateControlButtonView(playing: false)
+        dismiss(animated: true, completion: nil)
     }
 
     func didPlay() {
@@ -148,20 +126,6 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     /*
      * View control methods
      */
-    private func presentInformationAlert(message: String) {
-        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alertController, animated: true, completion: nil)
-    }
-
-    private func presentPicker() {
-        present(_pickerFactory.build(), animated: true, completion: nil)
-    }
-
-    private func dismissPicker() {
-        dismiss(animated: true, completion: nil)
-    }
-
     private func updateControlButtonView(playing: Bool) {
         if playing {
             controlButton.setTitle(PlayerViewController.BUTTON_TEXT_PAUSE, for: .normal)
@@ -170,26 +134,11 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
         }
     }
 
-    private func unsetSongInformation() {
-        let info = AudioInfoModel.EmptyAudioInfo
-        artistLabel.text = info.artist
-        titleLabel.text = info.title
-        albumLabel.text = info.album
-        artworkImage.image = nil
-    }
-
     private func updateSongInformation(withInfo info: AudioInfoModel) {
         artistLabel.text = info.artist
         titleLabel.text = info.title
         albumLabel.text = info.album
         artworkImage.image = info.artworkImage(ofSize: artworkImage.bounds.size)
-    }
-    
-    private func unsetSeekInformation() {
-        elapsedTimeLabel.text = "-:--"
-        remainingTimeLabel.text = "-:--"
-        seekSlider.setValue(0, animated: false)
-        seekSlider.isEnabled = false
     }
     
     private func updateSeekInformation(withCurrentTime currentTime: TimeInterval, ofWholeDuration wholeDuration: TimeInterval) {

@@ -40,18 +40,9 @@ class SongTableViewController : UITableViewController {
         return cell
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier else {
-            return
-        }
-        switch identifier {
-        case "showPlayerSegue":
-            guard let selectedPath = self.tableView.indexPathForSelectedRow else {
-                return
-            }
-            PlayerService.shared.startPlaylist(ofItems: _audioInfoList.getMediaItemArray(atIndex: selectedPath.row), startIndex: 0)
-        default:
-            break
-        }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        PlayerService.shared.startPlaylist(ofItems: _audioInfoList.getMediaItemArray(atIndex: indexPath.row), startIndex: 0)
+        tableView.deselectRow(at: indexPath, animated: true)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "didStartPlaylist"), object: nil, userInfo: nil)
     }
 }
