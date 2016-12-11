@@ -40,8 +40,10 @@ class PlaylistManagerModelDelegateWeakArray : Sequence {
     }
     
     private func clean() {
-        for (index, element) in elements.enumerated() {
-            if element.isPresent {
+        var index = 0
+        while index < elements.count {
+            if elements[index].isPresent {
+                index += 1
                 continue
             }
             elements.remove(at: index)

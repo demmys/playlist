@@ -15,6 +15,7 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
     private weak var _delegate: AudioModelDelegate!
     private var _progressTimer: Timer?
     private var _operationQueue: OperationQueue?
+    private var _pausedTime: TimeInterval?
 
     var isPlaying: Bool {
         return _player.isPlaying
@@ -73,6 +74,9 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
      * Audio control methods
      */
     func play(withDelay delay: TimeInterval = 0) {
+        if let pausedTime = _pausedTime {
+            _player.currentTime = pausedTime
+        }
         if delay > 0 {
             _player.play(atTime: _player.deviceCurrentTime + delay)
         } else {
@@ -83,21 +87,25 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
 
     func pause() {
         _player.pause()
+        updatePausedTime()
         endNotifyingPlayingAudioDidElapseEvent()
     }
 
     func stop() {
         _player.stop()
         _player.currentTime = 0.0
+        updatePausedTime()
         endNotifyingPlayingAudioDidElapseEvent()
     }
 
     func cue() {
         _player.currentTime = 0.0
+        updatePausedTime()
     }
 
     func seek(toTime time: TimeInterval) {
         _player.currentTime = time
+        updatePausedTime()
     }
     func seek(bySeconds seconds: Int, toForward forwarding: Bool) {
         if forwarding {
@@ -105,6 +113,11 @@ class AudioModel : NSObject, AVAudioPlayerDelegate {
         } else {
             _player.currentTime -= TimeInterval(seconds)
         }
+        updatePausedTime()
+    }
+
+    private func updatePausedTime() {
+        _pausedTime = _player.currentTime
     }
     
     private func beginNotifyingPlayingAudioDidElapseEvent() {

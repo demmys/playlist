@@ -36,6 +36,21 @@ class PlaylistSongTableViewController : UITableViewController {
         return cell
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+        switch identifier {
+        case "showPlayerSegue":
+            guard let selectedPath = self.tableView.indexPathForSelectedRow else {
+                return
+            }
+            PlayerService.shared.startPlaylist(ofItems: _playlist.items, startIndex: selectedPath.row)
+        default:
+            break
+        }
+    }
+    
     func setPlaylist(_ playlist: MPMediaPlaylist) {
         _playlist = playlist
     }

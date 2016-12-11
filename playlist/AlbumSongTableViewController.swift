@@ -35,8 +35,23 @@ class AlbumSongTableViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "albumSongCell", for: indexPath) as! AlbumSongTableViewCell
         let info = _audioInfoList.get(atIndex: indexPath.row)
-        cell.setAudioInfo(info)
+        cell.setAudioInfo(info, ofIndex: indexPath.row)
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+        switch identifier {
+        case "showPlayerSegue":
+            guard let selectedPath = self.tableView.indexPathForSelectedRow else {
+                return
+            }
+            PlayerService.shared.startPlaylist(ofItems: _audioInfoList.items, startIndex: selectedPath.row)
+        default:
+            break
+        }
     }
     
     func setAlbumRepresentiveInfo(_ info: AudioInfoModel) {

@@ -16,12 +16,16 @@ class PlayerService {
     var playlist: PlaylistManagerModel? {
         return _playlistManager
     }
-
-    func buildPlaylist(withItems items: [MPMediaItem], startIndex: Int, usingDelegate delegate: PlaylistManagerModelDelegate) {
-        _playlistManager = PlaylistManagerModel(withItems: items, startIndex: startIndex, usingDelegate: delegate)
+    
+    func startPlaylist(ofItems items: [MPMediaItem], startIndex: Int) {
+        if let oldPlaylist = _playlistManager, oldPlaylist.isPlaying {
+            finishPlaylist()
+        }
+        _playlistManager = PlaylistManagerModel(withItems: items, startIndex: startIndex)
+        _playlistManager?.togglePlay()
     }
 
-    func destructPlaylist() {
+    func finishPlaylist() {
         _playlistManager = nil
     }
 }

@@ -26,6 +26,12 @@ class AudioInfoSectionedListModel {
         return _indexTitles
     }
     
+    var items: [MPMediaItem] {
+        return _collections.reduce([]) { (items, collection) in
+            items + collection.items
+        }
+    }
+    
     init<ComparableType: Comparable>(fromQuery query: MPMediaQuery, sortByProperties properties: [String], usingConverter converter: @escaping (Any) -> ComparableType?, ascending: Bool = true) {
         if let collections = query.collections {
             _collections = collections.sorted(by: collectionComparator(forProperties: properties, usingConverter: converter))
@@ -45,36 +51,16 @@ class AudioInfoSectionedListModel {
     func itemCountOfSection(atIndex index: Int) -> Int {
         return _collectionSections[index].range.length
     }
+    
+    func getMediaItemArray(atIndex index: Int) -> [MPMediaItem] {
+        return _collections[index].items
+    }
 
     func get(atIndex index: Int) -> AudioInfoModel {
         return forceBuildAudioInfo(fromItemOfIndex: index)
     }
     func get(inSection sectionIndex: Int, index: Int) -> AudioInfoModel {
         return forceBuildAudioInfo(fromItemOfIndex: index, inSection: sectionIndex)
-    }
-    
-    private func collectionComparator<ComparableType: Comparable>(forProperties properties: [String], usingConverter converter: @escaping (Any) -> ComparableType?) -> (MPMediaItemCollection, MPMediaItemCollection) -> Bool {
-        return { (leftCollection, rightCollection) in
-            for property in properties {
-                guard let leftValue = leftCollection.representativeItem?.value(forKey: property) else {
-                    return false
-                }
-                guard let left = converter(leftValue) else {
-                    return false
-                }
-                guard let rightValue = rightCollection.representativeItem?.value(forKey: property) else {
-                    return true
-                }
-                guard let right = converter(rightValue) else {
-                    return true
-                }
-                guard left != right else {
-                    continue
-                }
-                return left < right
-            }
-            return true
-        }
     }
     
     func buildAudioInfo(fromItemOfIndex index: Int) -> AudioInfoModel? {
@@ -106,5 +92,29 @@ class AudioInfoSectionedListModel {
             return AudioInfoModel.EmptyAudioInfo
         }
         return info
+    }
+    
+    private func collectionComparator<ComparableType: Comparable>(forProperties properties: [String], usingConverter converter: @escaping (Any) -> ComparableType?) -> (MPMediaItemCollection, MPMediaItemCollection) -> Bool {
+        return { (leftCollection, rightCollection) in
+            for property in properties {
+                guard let leftValue = leftCollection.representativeItem?.value(forKey: property) else {
+                    return false
+                }
+                guard let left = converter(leftValue) else {
+                    return false
+                }
+                guard let rightValue = rightCollection.representativeItem?.value(forKey: property) else {
+                    return true
+                }
+                guard let right = converter(rightValue) else {
+                    return true
+                }
+                guard left != right else {
+                    continue
+                }
+                return left < right
+            }
+            return true
+        }
     }
 }

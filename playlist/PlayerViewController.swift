@@ -46,6 +46,10 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpOutside)
 
         _pickerFactory = PickerFactory(delegate: self)
+        
+        if let playlist = PlayerService.shared.playlist {
+            playlist.addDelegate(self)
+        }
     }
 
     /*
@@ -101,15 +105,8 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
      * PickerModelDelegate
      */
     func didPickFinish(collection: MPMediaItemCollection) {
-        var interrupting = false
-        if let oldPlaylist = PlayerService.shared.playlist, oldPlaylist.isPlaying {
-            interrupting = true
-            PlayerService.shared.destructPlaylist()
-        }
-        PlayerService.shared.buildPlaylist(withItems: collection.items, startIndex: 0, usingDelegate: self)
-        if interrupting {
-            PlayerService.shared.playlist?.togglePlay()
-        }
+        PlayerService.shared.startPlaylist(ofItems: collection.items, startIndex: 0)
+        PlayerService.shared.playlist?.addDelegate(self)
         dismissPicker()
     }
 
@@ -134,7 +131,7 @@ class PlayerViewController: UIViewController, PickerFactoryDelegate, PlaylistMan
     }
 
     func playlistDidFinish() {
-        PlayerService.shared.destructPlaylist()
+        PlayerService.shared.finishPlaylist()
         unsetSongInformation()
         unsetSeekInformation()
         updateControlButtonView(playing: false)

@@ -29,15 +29,13 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
         get { return _playlist.isPlaying }
     }
 
-    init?(withItems items: [MPMediaItem], startIndex: Int, usingDelegate delegate: PlaylistManagerModelDelegate) {
+    init?(withItems items: [MPMediaItem], startIndex: Int) {
         guard let audioCollection = PlaylistModel(withItems: items, startIndex: startIndex, withDelegate: self) else {
             return nil
         }
         _playlist = audioCollection
         _audioSession = AudioSessionModel()
         _remoteControl = RemoteControlModel(delegate: self)
-        addDelegate(delegate)
-        notifyItemDidChange()
     }
 
     deinit {
@@ -49,6 +47,13 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
     
     func addDelegate(_ delegate: PlaylistManagerModelDelegate) {
         _delegates.append(delegate)
+        // notify current playing status to new delegate and others
+        notifyItemDidChange()
+        if _playlist.isPlaying {
+            delegate.didPlay()
+        } else {
+            delegate.didPause()
+        }
     }
 
     func setRepeatMode(_ mode: RepeatMode) {
