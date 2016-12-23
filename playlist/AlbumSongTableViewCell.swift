@@ -11,6 +11,7 @@ import UIKit
 class AlbumSongTableViewCell : UITableViewCell {
     @IBOutlet weak var trackNoLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var addPlaylistButton: UIButton!
     
     func setAudioInfo(_ info: AudioInfoModel, ofIndex index: Int) {
         trackNoLabel.text = String(info.trackNo)

@@ -39,6 +39,8 @@
 		10C44A011DFD815000BC1565 /* LibraryTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C44A001DFD815000BC1565 /* LibraryTabBarController.swift */; };
 		10C44A031DFD82B900BC1565 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C44A021DFD82B900BC1565 /* MiniPlayerView.swift */; };
 		10C44A051DFD830700BC1565 /* MiniPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 10C44A041DFD830700BC1565 /* MiniPlayerView.xib */; };
+		10C44A071DFEE4E300BC1565 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C44A061DFEE4E300BC1565 /* PlaylistViewController.swift */; };
+		10C44A091DFEE53900BC1565 /* PlaylistViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C44A081DFEE53900BC1565 /* PlaylistViewCell.swift */; };
 		10E259EC1DC639C4006B35DB /* AudioModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E259EB1DC639C4006B35DB /* AudioModelDelegate.swift */; };
 		10E259EE1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E259ED1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift */; };
 		10E9C87C1DF45FF500415D55 /* PlaylistSongTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E9C87B1DF45FF500415D55 /* PlaylistSongTableViewController.swift */; };
@@ -103,6 +105,8 @@
 		10C44A001DFD815000BC1565 /* LibraryTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTabBarController.swift; sourceTree = "<group>"; };
 		10C44A021DFD82B900BC1565 /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		10C44A041DFD830700BC1565 /* MiniPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MiniPlayerView.xib; path = ../MiniPlayerView.xib; sourceTree = "<group>"; };
+		10C44A061DFEE4E300BC1565 /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
+		10C44A081DFEE53900BC1565 /* PlaylistViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewCell.swift; sourceTree = "<group>"; };
 		10E259EB1DC639C4006B35DB /* AudioModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModelDelegate.swift; sourceTree = "<group>"; };
 		10E259ED1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManagerModelDelegate.swift; sourceTree = "<group>"; };
 		10E9C87B1DF45FF500415D55 /* PlaylistSongTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistSongTableViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +174,8 @@
 				10C44A001DFD815000BC1565 /* LibraryTabBarController.swift */,
 				10B67C6B1DBFA62E00EF1D47 /* PlayerViewController.swift */,
 				10C44A021DFD82B900BC1565 /* MiniPlayerView.swift */,
+				10C44A061DFEE4E300BC1565 /* PlaylistViewController.swift */,
+				10C44A081DFEE53900BC1565 /* PlaylistViewCell.swift */,
 				108C55DB1DE9932000C32023 /* MediaQueryBuilder.swift */,
 				108C55CD1DE5DB9100C32023 /* AudioInfoSectionedListModel.swift */,
 				1010C57A1DF473FD00AD23D7 /* AudioInfoSectionedAndPairedListModel.swift */,
@@ -383,6 +389,7 @@
 				10E259EC1DC639C4006B35DB /* AudioModelDelegate.swift in Sources */,
 				10B67C6C1DBFA62E00EF1D47 /* PlayerViewController.swift in Sources */,
 				10C449FC1DFAF3FC00BC1565 /* PlayerService.swift in Sources */,
+				10C44A091DFEE53900BC1565 /* PlaylistViewCell.swift in Sources */,
 				1029DC401DF31EB3003383C2 /* AlbumSongTableViewCell.swift in Sources */,
 				10B67C9E1DC4753900EF1D47 /* PlaylistManagerModel.swift in Sources */,
 				10E259EE1DC63A7C006B35DB /* PlaylistManagerModelDelegate.swift in Sources */,
@@ -399,6 +406,7 @@
 				10B67CA01DC4755400EF1D47 /* AudioModel.swift in Sources */,
 				1055AA691DCB91390072C42F /* AudioInfoModel.swift in Sources */,
 				1010C57B1DF473FD00AD23D7 /* AudioInfoSectionedAndPairedListModel.swift in Sources */,
+				10C44A071DFEE4E300BC1565 /* PlaylistViewController.swift in Sources */,
 				1055AA671DCB76350072C42F /* RemoteControlModelDelegate.swift in Sources */,
 				10E9C87E1DF4600500415D55 /* PlaylistSongTableViewCell.swift in Sources */,
 				10F233001DCEFE3900F4D5BE /* SongTableViewController.swift in Sources */,

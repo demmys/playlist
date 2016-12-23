@@ -20,13 +20,17 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
     private var _audioSession: AudioSessionModel!
     private var _remoteControl: RemoteControlModel!
     private var _shuffleMode: ShuffleMode = .noShuffle
+    
+    var items: [MPMediaItem] {
+        return _playlist.items
+    }
 
     var playingItem: MPMediaItem {
-        get { return _playlist.playingItem }
+        return _playlist.playingItem
     }
     
     var isPlaying: Bool {
-        get { return _playlist.isPlaying }
+        return _playlist.isPlaying
     }
 
     init?(withItems items: [MPMediaItem], startIndex: Int) {
@@ -65,12 +69,12 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
         // TODO: shuffle remaining list
     }
 
-    func insert(items: [MPMediaItem]) {
-        // TODO: insert and change next cache
+    func insert(_ items: [MPMediaItem]) {
+        _playlist.insert(items)
     }
 
-    func append(items: [MPMediaItem]) {
-        // TODO: append and change next cache if changed
+    func append(_ items: [MPMediaItem]) {
+        _playlist.append(items)
     }
 
     /*

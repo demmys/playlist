@@ -21,15 +21,28 @@ class PlayerService {
         return _playlistManager != nil
     }
     
-    func startPlaylist(ofItems items: [MPMediaItem], startIndex: Int) {
+    func startPlaylist(ofItems items: [MPMediaItem], startIndex: Int, willStartAutomatic: Bool = true) {
         if let oldPlaylist = _playlistManager, oldPlaylist.isPlaying {
             finishPlaylist()
         }
         _playlistManager = PlaylistManagerModel(withItems: items, startIndex: startIndex)
-        _playlistManager?.togglePlay()
+        if willStartAutomatic {
+            _playlistManager?.togglePlay()
+        }
     }
 
     func finishPlaylist() {
         _playlistManager = nil
+    }
+    
+    func appendSong(_ item: MPMediaItem) {
+        appendSongs([item])
+    }
+    
+    func appendSongs(_ items: [MPMediaItem]) {
+        guard let playlistManager = _playlistManager else {
+            return startPlaylist(ofItems: items, startIndex: 0, willStartAutomatic: false)
+        }
+        playlistManager.append(items)
     }
 }

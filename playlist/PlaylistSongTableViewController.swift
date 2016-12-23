@@ -12,7 +12,8 @@ import MediaPlayer
 class PlaylistSongTableViewController : UITableViewController {
     @IBOutlet weak var artworkImage: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-
+    @IBOutlet weak var addPlaylistButton: UIButton!
+    
     private var _playlist: MPMediaPlaylist!
     
     override func viewDidLoad() {

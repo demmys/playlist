@@ -42,6 +42,10 @@ class PlaylistModel : AudioModelDelegate {
         }
     }
     
+    var items: [MPMediaItem] {
+        return _items
+    }
+    
     var playingItem: MPMediaItem {
         return _playing.item
     }
@@ -88,6 +92,22 @@ class PlaylistModel : AudioModelDelegate {
                 _playing.audio.play()
             }
             _delegate.playingAudioDidChangeAutomatically(changedTo: playingItem)
+        }
+    }
+    
+    /*
+     * Playing list control methods
+     */
+    func insert(_ items: [MPMediaItem]) {
+        _items.insert(contentsOf: items, at: _playing.index + 1)
+        updateNextCache()
+    }
+
+    func append(_ items: [MPMediaItem]) {
+        let needToUpdateCache = _playing.index == _items.count - 1
+        _items.append(contentsOf: items)
+        if needToUpdateCache {
+            updateNextCache()
         }
     }
     

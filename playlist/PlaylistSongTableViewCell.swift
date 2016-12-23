@@ -12,6 +12,7 @@ class PlaylistSongTableViewCell : UITableViewCell {
     @IBOutlet weak var artworkImage: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistLabel: UILabel!
+    @IBOutlet weak var addPlaylistButton: UIButton!
 
     func setAudioInfo(_ info: AudioInfoModel) {
         titleLabel.text = info.title

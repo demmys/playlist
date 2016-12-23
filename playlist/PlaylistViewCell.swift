@@ -1,19 +1,18 @@
 //
-//  SongTableViewCell.swift
+//  PlaylistViewCell.swift
 //  playlist
 //
-//  Created by Atsuki Demizu on 2016/11/06.
+//  Created by Atsuki Demizu on 2016/12/12.
 //  Copyright © 2016年 Atsuki Demizu. All rights reserved.
 //
 
 import UIKit
 
-class SongTableViewCell : UITableViewCell {
+class PlaylistViewCell : UITableViewCell {
     @IBOutlet weak var artworkImage: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistLabel: UILabel!
-    @IBOutlet weak var addPlaylistButton: UIButton!
-
+    
     func setAudioInfo(_ info: AudioInfoModel) {
         titleLabel.text = info.title
         artistLabel.text = info.artist

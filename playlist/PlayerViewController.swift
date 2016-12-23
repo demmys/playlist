@@ -25,6 +25,7 @@ class PlayerViewController: UIViewController, PlaylistManagerModelDelegate {
     @IBOutlet weak var seekSlider: UISlider!
     @IBOutlet weak var elapsedTimeLabel: UILabel!
     @IBOutlet weak var remainingTimeLabel: UILabel!
+    @IBOutlet weak var playlistButton: UIButton!
 
     private var _seeking: Bool = false
 
@@ -33,7 +34,6 @@ class PlayerViewController: UIViewController, PlaylistManagerModelDelegate {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-
         closeButton.addTarget(self, action: #selector(closeButtonDidTouch), for: .touchUpInside)
         controlButton.addTarget(self, action: #selector(controlButtonDidTouch), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonDidTouch), for: .touchUpInside)
@@ -42,7 +42,7 @@ class PlayerViewController: UIViewController, PlaylistManagerModelDelegate {
         seekSlider.addTarget(self, action: #selector(seekSliderWillBeginSeek), for: .touchDown)
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpInside)
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpOutside)
-        
+        playlistButton.addTarget(self, action: #selector(playlistButtonDidTouch), for: .touchUpInside)
         if let playlist = PlayerService.shared.playlist {
             playlist.addDelegate(self)
         }
@@ -92,6 +92,13 @@ class PlayerViewController: UIViewController, PlaylistManagerModelDelegate {
         let currentTime = seekSlider.value
         let wholeDuration = playlist.playingItem.playbackDuration
         updateSeekLabel(withCurrentSeconds: detailedTimeToSeconds(currentTime), ofWholeSeconds: detailedTimeToSeconds(wholeDuration))
+    }
+    
+    @objc func playlistButtonDidTouch(_ sender: AnyObject) {
+        guard let controller = storyboard?.instantiateViewController(withIdentifier: "playlistViewController") as? PlaylistViewController else {
+            return
+        }
+        present(controller, animated: true, completion: nil)
     }
 
     /*

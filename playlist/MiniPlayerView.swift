@@ -18,6 +18,7 @@ class MiniPlayerView : UIView, PlaylistManagerModelDelegate {
     @IBOutlet weak var nextButton: UIButton!
     
     override func awakeFromNib() {
+        super.awakeFromNib()
         let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
         effectView.frame = bounds
         addSubview(effectView)

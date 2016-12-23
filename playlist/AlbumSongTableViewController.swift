@@ -14,6 +14,7 @@ class AlbumSongTableViewController : UITableViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistLabel: UILabel!
     @IBOutlet weak var detailInfoLabel: UILabel!
+    @IBOutlet weak var addPlaylistButton: UIButton!
 
     private var _audioInfoList: AudioInfoSectionedListModel!
     private var _representiveInfo: AudioInfoModel!
