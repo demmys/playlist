@@ -35,14 +35,17 @@ class PlayerService {
         _playlistManager = nil
     }
     
-    func appendSong(_ item: MPMediaItem) {
-        appendSongs([item])
-    }
-    
     func appendSongs(_ items: [MPMediaItem]) {
         guard let playlistManager = _playlistManager else {
             return startPlaylist(ofItems: items, startIndex: 0, willStartAutomatic: false)
         }
         playlistManager.append(items)
+    }
+    
+    func insertSongs(_ items: [MPMediaItem]) {
+        guard let playlistManager = _playlistManager else {
+            return startPlaylist(ofItems: items, startIndex: 0, willStartAutomatic: false)
+        }
+        playlistManager.insert(items)
     }
 }

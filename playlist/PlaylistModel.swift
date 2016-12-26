@@ -100,14 +100,14 @@ class PlaylistModel : AudioModelDelegate {
      */
     func insert(_ items: [MPMediaItem]) {
         _items.insert(contentsOf: items, at: _playing.index + 1)
-        updateNextCache()
+        updateNextCache(forceUpdate: true)
     }
 
     func append(_ items: [MPMediaItem]) {
         let needToUpdateCache = _playing.index == _items.count - 1
         _items.append(contentsOf: items)
         if needToUpdateCache {
-            updateNextCache()
+            updateNextCache(forceUpdate: true)
         }
     }
     
@@ -211,7 +211,7 @@ class PlaylistModel : AudioModelDelegate {
         updateNextCache()
     }
     
-    private func updatePrevCache() {
+    private func updatePrevCache(forceUpdate: Bool = false) {
         func cachePrevItemAsPrev() {
             _prevCache = buildCachedAudioModel(ofIndex: _playing.index - 1, playSoon: false)
         }
@@ -219,7 +219,7 @@ class PlaylistModel : AudioModelDelegate {
             _prevCache = buildCachedAudioModel(ofIndex: _items.count - 1, playSoon: false)
         }
         
-        if let prevCache = _prevCache {
+        if let prevCache = _prevCache, !forceUpdate {
             if case .allRepeat = repeatMode, _playing.index == 0 && prevCache.index != _items.count - 1 {
                 cacheLastItemAsPrev()
             } else if prevCache.index != _playing.index - 1 {
@@ -234,7 +234,7 @@ class PlaylistModel : AudioModelDelegate {
         }
     }
     
-    private func updateNextCache() {
+    private func updateNextCache(forceUpdate: Bool = false) {
         func cacheNextItemAsNext() {
             _nextCache = buildCachedAudioModel(ofIndex: _playing.index + 1, playSoon: false)
         }
@@ -242,7 +242,7 @@ class PlaylistModel : AudioModelDelegate {
             _nextCache = buildCachedAudioModel(ofIndex: 0, playSoon: false)
         }
         
-        if let nextCache = _nextCache {
+        if let nextCache = _nextCache, !forceUpdate {
             if case .allRepeat = repeatMode, _playing.index + 1 == _items.count && nextCache.index != 0 {
                 cacheFirstItemAsNext()
             } else if nextCache.index != _playing.index + 1 {

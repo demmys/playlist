@@ -11,10 +11,12 @@ import MediaPlayer
 
 class SongTableViewController : UITableViewController {
     private var _audioInfoList: AudioInfoSectionedListModel!
+    private var _alertBuilder: AlertBuilder!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         _audioInfoList = AudioInfoSectionedListModel(fromQuery: MediaQueryBuilder.songs())
+        _alertBuilder = AlertBuilder(presentingViewController: self)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -36,11 +38,12 @@ class SongTableViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath) as! SongTableViewCell
         let info = _audioInfoList.get(inSection: indexPath.section, index: indexPath.row)
-        cell.setAudioInfo(info)
+        cell.setup(info: info, alertBuilder: _alertBuilder)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(indexPath.row)
         PlayerService.shared.startPlaylist(ofItems: _audioInfoList.getMediaItemArray(atIndex: indexPath.row), startIndex: 0)
         tableView.deselectRow(at: indexPath, animated: true)
         NotificationCenter.default.post(name: Notification.Name(rawValue: "didStartPlaylist"), object: nil, userInfo: nil)

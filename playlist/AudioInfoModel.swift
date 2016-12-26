@@ -13,6 +13,7 @@ class AudioInfoModel {
     private static let NoText = "-"
     static let EmptyAudioInfo = AudioInfoModel()
 
+    let originalItem: MPMediaItem?
     let title: String
     let artist: String
     let album: String
@@ -24,6 +25,7 @@ class AudioInfoModel {
     let trackNo: Int
 
     private init() {
+        originalItem = nil
         title = AudioInfoModel.NoText
         artist = AudioInfoModel.NoText
         album = AudioInfoModel.NoText
@@ -36,6 +38,7 @@ class AudioInfoModel {
     }
     
     init(ofItem item: MPMediaItem) {
+        originalItem = item
         let artistInfo = item.artist ?? AudioInfoModel.NoText
         title = item.title ?? AudioInfoModel.NoText
         artist = artistInfo

@@ -13,8 +13,8 @@ class PlaylistSongTableViewController : UITableViewController {
     @IBOutlet weak var artworkImage: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var addPlaylistButton: UIButton!
-    
     private var _playlist: MPMediaPlaylist!
+    private var _alertBuilder: AlertBuilder!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +24,8 @@ class PlaylistSongTableViewController : UITableViewController {
         } else {
             artworkImage.image = nil
         }
+        addPlaylistButton.addTarget(self, action: #selector(addPlaylistButtonDidTouch), for: .touchUpInside)
+        _alertBuilder = AlertBuilder(presentingViewController: self)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -33,7 +35,7 @@ class PlaylistSongTableViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistSongCell", for: indexPath) as! PlaylistSongTableViewCell
         let info = AudioInfoModel(ofItem: _playlist.items[indexPath.row])
-        cell.setAudioInfo(info)
+        cell.setup(info: info, alertBuilder: _alertBuilder)
         return cell
     }
     
@@ -44,5 +46,12 @@ class PlaylistSongTableViewController : UITableViewController {
 
     func setPlaylist(_ playlist: MPMediaPlaylist) {
         _playlist = playlist
+    }
+    
+    /*
+     * Interface Builder callbacks
+     */
+    @objc func addPlaylistButtonDidTouch(_ sender: AnyObject) {
+        _alertBuilder?.presentAddPlaylistAlert(title: _playlist.name, items: _playlist.items)
     }
 }

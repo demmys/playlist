@@ -15,6 +15,7 @@ class AlbumSongTableViewController : UITableViewController {
     @IBOutlet weak var artistLabel: UILabel!
     @IBOutlet weak var detailInfoLabel: UILabel!
     @IBOutlet weak var addPlaylistButton: UIButton!
+    private var _alertBuilder: AlertBuilder!
 
     private var _audioInfoList: AudioInfoSectionedListModel!
     private var _representiveInfo: AudioInfoModel!
@@ -25,8 +26,10 @@ class AlbumSongTableViewController : UITableViewController {
         titleLabel.text = _representiveInfo.album
         artistLabel.text = _representiveInfo.albumArtist
         detailInfoLabel.text = _representiveInfo.genre
+        addPlaylistButton.addTarget(self, action: #selector(addPlaylistButtonDidTouch), for: .touchUpInside)
         let query = MediaQueryBuilder.songs(inAlbum: _representiveInfo.album, ofArtist: _representiveInfo.albumArtist)
         _audioInfoList = AudioInfoSectionedListModel(fromQuery: query, sortByProperties: [MPMediaItemPropertyDiscNumber, MPMediaItemPropertyAlbumTrackNumber], usingConverter: { $0 as? Int })
+        _alertBuilder = AlertBuilder(presentingViewController: self)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -36,7 +39,7 @@ class AlbumSongTableViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "albumSongCell", for: indexPath) as! AlbumSongTableViewCell
         let info = _audioInfoList.get(atIndex: indexPath.row)
-        cell.setAudioInfo(info, ofIndex: indexPath.row)
+        cell.setup(info: info, alertBuilder: _alertBuilder)
         return cell
     }
     
@@ -48,5 +51,12 @@ class AlbumSongTableViewController : UITableViewController {
     
     func setAlbumRepresentiveInfo(_ info: AudioInfoModel) {
         _representiveInfo = info
+    }
+    
+    /*
+     * Interface Builder callbacks
+     */
+    @objc func addPlaylistButtonDidTouch(_ sender: AnyObject) {
+        _alertBuilder?.presentAddPlaylistAlert(title: _representiveInfo.album, items: _audioInfoList.items)
     }
 }
