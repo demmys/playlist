@@ -52,6 +52,24 @@ class AudioInfoSectionedListModel {
         return _collectionSections[index].range.length
     }
     
+    func getMediaItem(index: Int) -> MPMediaItem? {
+        guard 0 <= index && index < _collections.count else {
+            return nil
+        }
+        guard let item = _collections[index].representativeItem else {
+            return nil
+        }
+        return item
+    }
+    
+    func getMediaItem(atIndex itemIndex: Int, inSection sectionIndex: Int) -> MPMediaItem? {
+        let itemSection = _collectionSections[sectionIndex]
+        guard 0 <= itemIndex && itemIndex < itemSection.range.length else {
+            return nil
+        }
+        return getMediaItem(index: itemSection.range.location + itemIndex)
+    }
+    
     func getMediaItemArray(atIndex index: Int) -> [MPMediaItem] {
         return _collections[index].items
     }
@@ -64,21 +82,16 @@ class AudioInfoSectionedListModel {
     }
     
     func buildAudioInfo(fromItemOfIndex index: Int) -> AudioInfoModel? {
-        guard 0 <= index && index < _collections.count else {
-            return nil
-        }
-        let collection = _collections[index]
-        guard let item = collection.representativeItem else {
+        guard let item = getMediaItem(index: index) else {
             return nil
         }
         return AudioInfoModel(ofItem: item)
     }
     func buildAudioInfo(fromItemOfIndex itemIndex: Int, inSection sectionIndex: Int) -> AudioInfoModel? {
-        let itemSection = _collectionSections[sectionIndex]
-        guard 0 <= itemIndex && itemIndex < itemSection.range.length else {
+        guard let item = getMediaItem(atIndex: itemIndex, inSection: sectionIndex) else {
             return nil
         }
-        return buildAudioInfo(fromItemOfIndex: itemSection.range.location + itemIndex)
+        return AudioInfoModel(ofItem: item)
     }
     
     func forceBuildAudioInfo(fromItemOfIndex index: Int) -> AudioInfoModel {

@@ -46,7 +46,6 @@ class AlbumSongTableViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         PlayerService.shared.startPlaylist(ofItems: _audioInfoList.items, startIndex: indexPath.row)
         tableView.deselectRow(at: indexPath, animated: true)
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "didStartPlaylist"), object: nil, userInfo: nil)
     }
     
     func setAlbumRepresentiveInfo(_ info: AudioInfoModel) {

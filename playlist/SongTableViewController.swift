@@ -43,9 +43,10 @@ class SongTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
-        PlayerService.shared.startPlaylist(ofItems: _audioInfoList.getMediaItemArray(atIndex: indexPath.row), startIndex: 0)
+        guard let item = _audioInfoList.getMediaItem(atIndex: indexPath.row, inSection: indexPath.section) else {
+            return
+        }
+        PlayerService.shared.startPlaylist(ofItems: [item], startIndex: 0)
         tableView.deselectRow(at: indexPath, animated: true)
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "didStartPlaylist"), object: nil, userInfo: nil)
     }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LibraryTabBarController : UITabBarController {
+class LibraryTabBarController : UITabBarController, PlayerServiceDelegate {
     private var _miniPlayer: MiniPlayerView?
 
     override func viewDidLoad() {
@@ -21,8 +21,8 @@ class LibraryTabBarController : UITabBarController {
         miniPlayer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewDidTap)))
         view.addSubview(miniPlayer)
         _miniPlayer = miniPlayer
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(didStartPlaylist), name: Notification.Name(rawValue: "didStartPlaylist"), object: nil)
+    
+        PlayerService.shared.delegate = self
     }
 
     /*
@@ -36,9 +36,9 @@ class LibraryTabBarController : UITabBarController {
     }
     
     /*
-     * NotificationCenter callbacks
+     * PlayerServiceDelegate
      */
-    @objc func didStartPlaylist(notification: Notification) {
+    func playlistDidSet() {
         _miniPlayer?.present()
     }
 }

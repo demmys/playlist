@@ -40,8 +40,8 @@ class PlaylistSongTableViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        PlayerService.shared.startPlaylist(ofItems: _playlist.items, startIndex: indexPath.row)
         tableView.deselectRow(at: indexPath, animated: true)
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "didStartPlaylist"), object: nil, userInfo: nil)
     }
 
     func setPlaylist(_ playlist: MPMediaPlaylist) {

@@ -629,27 +629,17 @@
             </objects>
             <point key="canvasLocation" x="3705" y="-48"/>
         </scene>
-        <!--Playlist View Controller-->
+        <!--Playlist-->
         <scene sceneID="ayr-Hh-Rfe">
             <objects>
-                <tableViewController storyboardIdentifier="playlistViewController" id="Qle-Kc-VRv" customClass="PlaylistViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="Qle-Kc-VRv" customClass="PlaylistViewController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="72" sectionHeaderHeight="28" sectionFooterHeight="28" id="Jmm-KD-Xbe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <navigationBar key="tableHeaderView" contentMode="scaleToFill" id="THd-5x-xMR">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <items>
-                                <navigationItem title="Playlist" id="0d3-9c-WjV">
-                                    <barButtonItem key="leftBarButtonItem" title="Done" id="TNM-Xp-uxZ"/>
-                                    <barButtonItem key="rightBarButtonItem" title="Edit" id="8Sc-oy-TAy"/>
-                                </navigationItem>
-                            </items>
-                        </navigationBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="playlistCell" rowHeight="72" id="KCB-9C-ICo" customClass="PlaylistViewCell" customModule="playlist" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="72" width="375" height="72"/>
+                                <rect key="frame" x="0.0" y="28" width="375" height="72"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KCB-9C-ICo" id="CTW-H1-t8G">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
@@ -687,15 +677,37 @@
                             <outlet property="delegate" destination="Qle-Kc-VRv" id="FOc-Nq-Ifl"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Playlist" id="4Pu-0n-gUr">
+                        <barButtonItem key="backBarButtonItem" title="close" id="Xnf-Gq-Hh8"/>
+                        <barButtonItem key="leftBarButtonItem" title="done" id="G06-yu-rXh"/>
+                        <barButtonItem key="rightBarButtonItem" title="edit" id="oEs-HE-ztR"/>
+                    </navigationItem>
                     <connections>
-                        <outlet property="doneButton" destination="TNM-Xp-uxZ" id="StS-Yq-1GC"/>
-                        <outlet property="editButton" destination="8Sc-oy-TAy" id="J0r-Vt-ZaA"/>
-                        <outlet property="navigationBar" destination="THd-5x-xMR" id="v4z-Ku-fPd"/>
+                        <outlet property="doneButton" destination="G06-yu-rXh" id="ewM-2b-iyU"/>
+                        <outlet property="editButton" destination="oEs-HE-ztR" id="0Vo-no-Erp"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xyh-oU-CEq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4570" y="-48"/>
+            <point key="canvasLocation" x="5508" y="-48.125937031484263"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="1Ju-uN-AMs">
+            <objects>
+                <navigationController storyboardIdentifier="playlistNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="W8l-Eh-15W" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="w3m-je-BJM">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Qle-Kc-VRv" kind="relationship" relationship="rootViewController" id="wPk-9I-1VW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zTF-2M-NRq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4568.8000000000002" y="-48.125937031484263"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

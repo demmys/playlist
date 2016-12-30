@@ -29,6 +29,10 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
         return _playlist.playingItem
     }
     
+    var playingIndex: Int {
+        return _playlist.playingIndex
+    }
+    
     var isPlaying: Bool {
         return _playlist.isPlaying
     }
@@ -68,13 +72,24 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
         _shuffleMode = mode
         // TODO: shuffle remaining list
     }
-
+    
+    /*
+     * Playing list control methods
+     */
     func insert(_ items: [MPMediaItem]) {
         _playlist.insert(items)
     }
 
     func append(_ items: [MPMediaItem]) {
         _playlist.append(items)
+    }
+    
+    func delete(at index: Int) -> Bool {
+        return _playlist.delete(at: index)
+    }
+    
+    func move(from: Int, to: Int) -> Bool {
+        return _playlist.move(from: from, to: to)
     }
 
     /*

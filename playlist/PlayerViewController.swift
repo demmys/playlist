@@ -43,6 +43,7 @@ class PlayerViewController: UIViewController, PlaylistManagerModelDelegate {
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpInside)
         seekSlider.addTarget(self, action: #selector(seekSliderDidEndSeek), for: .touchUpOutside)
         playlistButton.addTarget(self, action: #selector(playlistButtonDidTouch), for: .touchUpInside)
+
         if let playlist = PlayerService.shared.playlist {
             playlist.addDelegate(self)
         }
@@ -95,7 +96,7 @@ class PlayerViewController: UIViewController, PlaylistManagerModelDelegate {
     }
     
     @objc func playlistButtonDidTouch(_ sender: AnyObject) {
-        guard let controller = storyboard?.instantiateViewController(withIdentifier: "playlistViewController") as? PlaylistViewController else {
+        guard let controller = storyboard?.instantiateViewController(withIdentifier: "playlistNavigationController") as? UINavigationController else {
             return
         }
         present(controller, animated: true, completion: nil)
