@@ -11,6 +11,7 @@ import MediaPlayer
 
 protocol PlaylistModelDelegate : class {
     func playingAudioTimeDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval)
+    func playingAudioTimeDidJump(currentTime: TimeInterval, wholeDuration: TimeInterval)
     func playingAudioDidChangeAutomatically(changedTo item: MPMediaItem)
     func playingAudioDidFinishAutomatically()
 }

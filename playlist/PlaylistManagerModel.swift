@@ -130,6 +130,10 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
     func playingAudioTimeDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
         notifyPlayingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
     }
+    
+    func playingAudioTimeDidJump(currentTime: TimeInterval, wholeDuration: TimeInterval) {
+        _remoteControl.updateElapsedPlaybackTime(currentTime)
+    }
 
     func playingAudioDidChangeAutomatically(changedTo item: MPMediaItem) {
         notifyItemDidChange()
@@ -211,7 +215,6 @@ class PlaylistManagerModel : PlaylistModelDelegate, RemoteControlModelDelegate {
     }
     
     private func notifyPlayingItemDidElapse(currentTime: TimeInterval, wholeDuration: TimeInterval) {
-        _remoteControl.updateElapsedPlaybackTime(currentTime)
         for delegate in _delegates {
             delegate.playingItemDidElapse(currentTime: currentTime, wholeDuration: wholeDuration)
         }

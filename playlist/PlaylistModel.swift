@@ -83,7 +83,7 @@ class PlaylistModel : AudioModelDelegate {
             _delegate.playingAudioTimeDidElapse(currentTime: sender.currentTime, wholeDuration: sender.duration)
         }
     }
-    
+
     func playingAudioDidFinish() {
         if repeatMode == .singleRepeat {
             _playing.audio.cue()
@@ -169,15 +169,18 @@ class PlaylistModel : AudioModelDelegate {
     func cue() {
         _playing.audio.cue()
         cancelNextPlayPreparation()
+        notifyPlayingAudioTimeDidJump()
     }
     
     func seek(toTime time: TimeInterval) {
         _playing.audio.seek(toTime: time)
         cancelNextPlayPreparation()
+        notifyPlayingAudioTimeDidJump()
     }
     func seek(bySeconds seconds: Int, toForward forwarding: Bool) {
         _playing.audio.seek(bySeconds: seconds, toForward: forwarding)
         cancelNextPlayPreparation()
+        notifyPlayingAudioTimeDidJump()
     }
     
     func stop() {
@@ -249,6 +252,10 @@ class PlaylistModel : AudioModelDelegate {
         return true
     }
     
+    private func notifyPlayingAudioTimeDidJump() {
+        _delegate.playingAudioTimeDidJump(currentTime: _playing.audio.currentTime, wholeDuration: _playing.audio.duration)
+    }
+    
     private func updateCache() {
         updatePrevCache()
         updateNextCache()
@@ -261,8 +268,11 @@ class PlaylistModel : AudioModelDelegate {
         func cacheLastItemAsPrev() {
             _prevCache = buildCachedAudioModel(ofIndex: _items.count - 1, playSoon: false)
         }
-        
-        if let prevCache = _prevCache, !forceUpdate {
+
+        if forceUpdate {
+            _prevCache = nil
+        }
+        if let prevCache = _prevCache {
             if case .allRepeat = repeatMode, _playing.index == 0 && prevCache.index != _items.count - 1 {
                 cacheLastItemAsPrev()
             } else if prevCache.index != _playing.index - 1 {
@@ -284,8 +294,12 @@ class PlaylistModel : AudioModelDelegate {
         func cacheFirstItemAsNext() {
             _nextCache = buildCachedAudioModel(ofIndex: 0, playSoon: false)
         }
-        
-        if let nextCache = _nextCache, !forceUpdate {
+
+        if forceUpdate {
+            cancelNextPlayPreparation()
+            _nextCache = nil
+        }
+        if let nextCache = _nextCache {
             if case .allRepeat = repeatMode, _playing.index + 1 == _items.count && nextCache.index != 0 {
                 cacheFirstItemAsNext()
             } else if nextCache.index != _playing.index + 1 {

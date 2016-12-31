@@ -119,6 +119,7 @@ class RemoteControlModel : NSObject {
 
     func updateNowPlayingInfo(withInfo info: AudioInfoModel) {
         var nowPlayingInfo: [String : Any] = [
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: 0,
             MPMediaItemPropertyArtist: info.artist,
             MPMediaItemPropertyTitle: info.title,
             MPMediaItemPropertyAlbumTitle: info.album,
