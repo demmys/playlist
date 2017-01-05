@@ -31,6 +31,7 @@ class PlaylistViewController : UITableViewController, PlaylistManagerModelDelega
         editButton.target = self
         editButton.action = #selector(editButtonDidTouch)
         updatePlayingInfo()
+        scrollToPlayingIndex()
 
         if let playlist = PlayerService.shared.playlist {
             playlist.addDelegate(self)
@@ -49,9 +50,6 @@ class PlaylistViewController : UITableViewController, PlaylistManagerModelDelega
     }
     
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.row == _index {
-            return false
-        }
         return true
     }
     
@@ -132,6 +130,13 @@ class PlaylistViewController : UITableViewController, PlaylistManagerModelDelega
             return
         }
         _items = items
+    }
+    
+    private func scrollToPlayingIndex() {
+        guard let index = _index else {
+            return
+        }
+        tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .top, animated: true)
     }
 
     private func dismiss() {

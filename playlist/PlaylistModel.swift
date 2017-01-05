@@ -116,7 +116,7 @@ class PlaylistModel : AudioModelDelegate {
     }
     
     func delete(at index: Int) -> Bool {
-        guard 0 < index && index < _items.count && index != _playing.index else {
+        guard 0 <= index && index < _items.count && index != _playing.index else {
             return false
         }
         let needToUpdatePrevCache = _playing.index == index + 1
@@ -135,13 +135,13 @@ class PlaylistModel : AudioModelDelegate {
         if from == to {
             return true
         }
-        guard 0 < from && from < _items.count && 0 < to && to < _items.count && from != _playing.index else {
+        guard 0 < from && from < _items.count && 0 < to && to < _items.count else {
             return false
         }
         let movedTo = to < from ? to : to - 1
         let movedPlaying = _playing.index < to ? _playing.index : _playing.index + 1
-        let needToUpdatePrevCache = _playing.index - 1 == from || movedPlaying - 1 == movedTo
-        let needToUpdateNextCache = _playing.index + 1 == from || movedPlaying + 1 == movedTo
+        let needToUpdatePrevCache = from == _playing.index || _playing.index - 1 == from || movedPlaying - 1 == movedTo
+        let needToUpdateNextCache = from == _playing.index || _playing.index + 1 == from || movedPlaying + 1 == movedTo
         let target = _items[from]
         _items.remove(at: from)
         _items.insert(target, at: movedTo)
