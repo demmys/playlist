@@ -27,7 +27,7 @@ class AlbumTableViewCell : UITableViewCell {
         rightArtworkImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(rightArtworkDidTap)))
     }
     
-    func leftArtworkDidTap(sender: UITapGestureRecognizer) {
+    @objc func leftArtworkDidTap(sender: UITapGestureRecognizer) {
         guard sender.state == .ended else {
             return
         }
@@ -37,7 +37,7 @@ class AlbumTableViewCell : UITableViewCell {
         callback(_leftAudioInfo)
     }
     
-    func rightArtworkDidTap(sender: UITapGestureRecognizer) {
+    @objc func rightArtworkDidTap(sender: UITapGestureRecognizer) {
         guard sender.state == .ended else {
             return
         }
