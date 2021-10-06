@@ -13,6 +13,7 @@ class LibraryTabBarController : UITabBarController, PlayerServiceDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         guard let miniPlayer = Bundle.main.loadNibNamed("MiniPlayerView", owner: self, options: nil)?.first as? MiniPlayerView else {
             return
         }

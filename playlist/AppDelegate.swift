@@ -13,7 +13,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        let tabBarController = self.window!.rootViewController as! UITabBarController
+        let tabBar = tabBarController.tabBar as UITabBar
+        let tabBarItemArtist = tabBar.items![0] as UITabBarItem
+        let tabBarItemAlbum = tabBar.items![1] as UITabBarItem
+        let tabBarItemSong = tabBar.items![2] as UITabBarItem
+        let tabBarItemPlaylist = tabBar.items![3] as UITabBarItem
+        tabBar.tintColor = UIColor(displayP3Red: 231 / 255, green: 165 / 255, blue: 201 / 255, alpha: 1)
+        tabBarItemArtist.image = UIImage(named: "InactiveArtistIcon")?.withRenderingMode(.alwaysOriginal)
+        tabBarItemAlbum.image = UIImage(named: "InactiveAlbumIcon")?.withRenderingMode(.alwaysOriginal)
+        tabBarItemSong.image = UIImage(named: "InactiveSongIcon")?.withRenderingMode(.alwaysOriginal)
+        tabBarItemPlaylist.image = UIImage(named: "InactivePlaylistIcon")?.withRenderingMode(.alwaysOriginal)
+        tabBarItemArtist.selectedImage = UIImage(named: "ArtistIcon")?.withRenderingMode(.alwaysOriginal)
+        tabBarItemAlbum.selectedImage = UIImage(named: "AlbumIcon")?.withRenderingMode(.alwaysOriginal)
+        tabBarItemSong.selectedImage = UIImage(named: "SongIcon")?.withRenderingMode(.alwaysOriginal)
+        tabBarItemPlaylist.selectedImage = UIImage(named: "PlaylistIcon")?.withRenderingMode(.alwaysOriginal)
         return true
     }
 

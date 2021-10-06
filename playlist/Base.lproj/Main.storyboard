@@ -9,18 +9,18 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Library Tab Bar Controller-->
+        <!--Library Controller-->
         <scene sceneID="oA8-6k-HzS">
             <objects>
-                <tabBarController id="piT-aO-e5Z" customClass="LibraryTabBarController" customModule="playlist" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController id="piT-aO-e5Z" customClass="LibraryController" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="BYP-x3-Vxr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="4em-JD-N3F" kind="relationship" relationship="viewControllers" id="MuT-2w-Dm9"/>
                         <segue destination="N4I-gd-l9x" kind="relationship" relationship="viewControllers" id="MAP-nw-Zcf"/>
+                        <segue destination="4em-JD-N3F" kind="relationship" relationship="viewControllers" id="MuT-2w-Dm9"/>
                         <segue destination="wMn-h0-Xhq" kind="relationship" relationship="viewControllers" id="TOK-4M-GJq"/>
                         <segue destination="9Wr-Nu-QtC" kind="relationship" relationship="viewControllers" id="8nM-7q-80F"/>
                     </connections>
@@ -158,7 +158,7 @@
         <scene sceneID="O8a-9B-L8E">
             <objects>
                 <navigationController id="4em-JD-N3F" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Album" id="AB9-Lx-O0W"/>
+                    <tabBarItem key="tabBarItem" title="Album" image="AlbumIcon" id="AB9-Lx-O0W"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="keZ-j5-1aN">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -710,7 +710,10 @@
             <point key="canvasLocation" x="4568.8000000000002" y="-48.125937031484263"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="AlbumIcon" width="30" height="29"/>
+    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="xGf-xY-fbD"/>
+        <segue reference="Lud-yE-uJq"/>
     </inferredMetricsTieBreakers>
 </document>
